@@ -1,0 +1,5575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Tempero Bahiano</title>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --sidebar: #0f172a;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --success-bg: #dcfce7;
+      --success-text: #166534;
+      --danger-bg: #fee2e2;
+      --danger-text: #991b1b;
+      --warning-bg: #fef3c7;
+      --warning-text: #92400e;
+      --info-bg: #dbeafe;
+      --info-text: #1e40af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    aside {
+      width: 270px;
+      background: linear-gradient(180deg, var(--sidebar), #111827);
+      color: #fff;
+      padding: 22px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      box-shadow: 8px 0 24px rgba(15, 23, 42, .18);
+      z-index: 10;
+    }
+
+    .brand {
+      margin-bottom: 32px;
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .brand p {
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+
+    .menu {
+      display: grid;
+      gap: 10px;
+    }
+
+    .menu button {
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #cbd5e1;
+      background: transparent;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: rgba(37, 99, 235, .22);
+      color: white;
+    }
+
+    .content {
+      margin-left: 270px;
+      width: calc(100% - 270px);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar h2 {
+      font-size: 22px;
+    }
+
+    .topbar span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    main {
+      padding: 26px;
+      max-width: 1600px;
+      margin: auto;
+    }
+
+    section {
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card,
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, .06);
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .card h3 {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .panel {
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .panel h2 {
+      margin-bottom: 16px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+      margin: -8px 0 16px;
+      line-height: 1.5;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    input,
+    select {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      background: white;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+
+    .btn {
+      border: none;
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-warning {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 10px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .icon-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, .16);
+    }
+
+    .icon-btn[data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+      z-index: 20;
+    }
+
+    .icon-btn[data-tooltip]:hover::after {
+      opacity: 1;
+    }
+
+    .btn-soft-primary {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+
+    .btn-soft-primary:hover {
+      background: #dbeafe;
+    }
+
+    .btn-soft-warning {
+      background: #fffbeb;
+      color: #b45309;
+      border-color: #fde68a;
+    }
+
+    .btn-soft-warning:hover {
+      background: #fef3c7;
+    }
+
+    .btn-soft-danger {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-soft-danger:hover {
+      background: #fee2e2;
+    }
+
+    .btn-soft-neutral {
+      background: #f8fafc;
+      color: #334155;
+      border-color: #cbd5e1;
+    }
+
+    .btn-soft-neutral:hover {
+      background: #e2e8f0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th,
+    td {
+      padding: 13px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      text-align: center;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      display: inline-block;
+    }
+
+    .livre {
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .ocupado {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .manutencao,
+    .aguardando-pagamento {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .confirmada {
+      background: var(--info-bg);
+      color: var(--info-text);
+    }
+
+    .cancelada {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .finalizada {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      white-space: nowrap;
+      min-width: 150px;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .lista-reservas-dashboard {
+      display: grid;
+      gap: 10px;
+    }
+
+    .reserva-dashboard-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: #f8fafc;
+      line-height: 1.5;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      z-index: 99;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(520px, 100%);
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 24px 70px rgba(15,23,42,.35);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .modal-body {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .modal-footer {
+      padding: 16px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal-close {
+      border: none;
+      background: #e2e8f0;
+      color: #0f172a;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    textarea {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      min-height: 96px;
+      resize: vertical;
+      outline: none;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+
+
+
+
+
+    /* Gestão de Reservas em tabela limpa */
+    #reservas .table-wrap {
+      overflow-x: auto;
+    }
+
+    #reservas table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    #reservas thead {
+      display: table-header-group;
+    }
+
+    #reservas th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 900;
+      text-align: center;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+
+    #reservas td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    #reservas tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    #reservas th:nth-child(1),
+    #reservas td:nth-child(1) {
+      width: 18%;
+    }
+
+    #reservas th:nth-child(2),
+    #reservas td:nth-child(2) {
+      width: 8%;
+    }
+
+    #reservas th:nth-child(3),
+    #reservas td:nth-child(3) {
+      width: 17%;
+    }
+
+    #reservas th:nth-child(4),
+    #reservas td:nth-child(4) {
+      width: 12%;
+    }
+
+    #reservas th:nth-child(5),
+    #reservas td:nth-child(5) {
+      width: 12%;
+    }
+
+    #reservas th:nth-child(6),
+    #reservas td:nth-child(6) {
+      width: 11%;
+      text-align: right;
+    }
+
+    #reservas th:nth-child(7),
+    #reservas td:nth-child(7) {
+      width: 22%;
+    }
+
+    #reservas .acoes-reserva {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    #reservas .acoes-reserva .icon-btn {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      #reservas table {
+        min-width: 900px;
+      }
+    }
+
+
+    /* Modal de detalhes da reserva organizado */
+    .detalhes-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .detalhes-secao {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .detalhes-secao h4 {
+      margin: 0 0 12px;
+      color: #0f172a;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    .detalhes-campos {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+    }
+
+    .detalhe-campo {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .detalhe-label {
+      display: block;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 4px;
+    }
+
+    .detalhe-valor {
+      display: block;
+      font-size: 14px;
+      color: #0f172a;
+      font-weight: 800;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .detalhes-financeiro {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .detalhe-total-box {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-color: #bfdbfe;
+    }
+
+    .detalhe-total-box .detalhe-valor {
+      color: #1d4ed8;
+      font-size: 18px;
+    }
+
+    @media (max-width: 720px) {
+      .detalhes-campos,
+      .detalhes-financeiro {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width: 850px) {
+      aside {
+        transform: translateX(-100%);
+        transition: .25s;
+      }
+
+      aside.open {
+        transform: translateX(0);
+      }
+
+      .content {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .mobile-menu {
+        display: inline-flex;
+      }
+
+      main {
+        padding: 18px;
+      }
+
+      .topbar {
+        padding: 14px 18px;
+      }
+    }
+  
+    .toolbar-reservas {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .toolbar-reservas .busca-box {
+      display: grid;
+      grid-template-columns: 1fr 180px 180px;
+      gap: 10px;
+    }
+
+    .reserva-form-modal {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .reserva-form-modal .full {
+      grid-column: 1 / -1;
+    }
+
+    .desconto-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .desconto-box h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .checkout-resumo {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .checkout-resumo div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .checkout-resumo strong {
+      color: #1d4ed8;
+      font-size: 16px;
+    }
+
+    /* Gestão de Reservas em tabela limpa */
+    #reservas .table-wrap {
+      overflow-x: auto;
+    }
+
+    #reservas table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    #reservas thead {
+      display: table-header-group;
+    }
+
+    #reservas th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 900;
+      text-align: center;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+
+    #reservas td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    #reservas tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    #reservas th:nth-child(1), #reservas td:nth-child(1) { width: 18%; }
+    #reservas th:nth-child(2), #reservas td:nth-child(2) { width: 8%; }
+    #reservas th:nth-child(3), #reservas td:nth-child(3) { width: 17%; }
+    #reservas th:nth-child(4), #reservas td:nth-child(4) { width: 12%; }
+    #reservas th:nth-child(5), #reservas td:nth-child(5) { width: 12%; }
+    #reservas th:nth-child(6), #reservas td:nth-child(6) { width: 11%; text-align: right; }
+    #reservas th:nth-child(7), #reservas td:nth-child(7) { width: 22%; }
+
+    #reservas .acoes-reserva {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    #reservas .acoes-reserva .icon-btn {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      #reservas table {
+        min-width: 900px;
+      }
+
+      .toolbar-reservas {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar-reservas .busca-box,
+      .reserva-form-modal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .checkout-detalhes-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .checkout-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .checkout-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .checkout-card h4 {
+      margin: 0 0 10px;
+      color: #334155;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .checkout-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 13px;
+    }
+
+    .checkout-linha:last-child {
+      border-bottom: none;
+    }
+
+    .checkout-linha strong {
+      color: #0f172a;
+    }
+
+    .checkout-total-final {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-color: #bfdbfe;
+    }
+
+    .checkout-total-final .checkout-linha strong {
+      color: #1d4ed8;
+      font-size: 18px;
+    }
+
+    @media (max-width: 720px) {
+      .checkout-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .checkout-pagamento-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      padding: 14px;
+      grid-column: 1 / -1;
+    }
+
+    .checkout-pagamento-box h4 {
+      margin: 0 0 10px;
+      color: #9a3412;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hospedes-adicionais-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .hospedes-adicionais-box h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hospede-extra-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .hospede-extra-card h5 {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 720px) {
+      .hospede-extra-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .logo-config-box {
+      grid-column: 1 / -1;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .logo-preview {
+      width: 160px;
+      max-height: 90px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      background: #fff;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      display: none;
+    }
+
+    .empresa-logo-print {
+      max-width: 120px;
+      max-height: 80px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      display: block;
+      margin: 0 auto 8px;
+    }
+
+
+/* === PADRÃO DE TIPOGRAFIA GLOBAL === */
+body {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+h2, h3 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+th {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+td {
+  font-size: 13px;
+}
+
+input, select, textarea, button {
+  font-size: 13px;
+}
+
+/* TABELAS PADRONIZADAS */
+table {
+  font-size: 13px;
+}
+
+th {
+  background: #f1f5f9;
+}
+
+td {
+  padding: 10px 8px;
+}
+
+
+/* === CONTROLE DE ACESSO / LOGIN === */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: min(460px, 100%);
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+  border: 1px solid #e2e8f0;
+}
+
+.login-card h2 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.login-card p {
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+.login-opcoes {
+  display: grid;
+  gap: 12px;
+}
+
+.login-opcoes button {
+  text-align: left;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  font-weight: 800;
+  transition: .2s;
+}
+
+.login-opcoes button:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.usuario-logado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usuario-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.btn-sair {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+</style>
+</head>
+
+<body>
+
+
+
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-card">
+    <h2>Hotel Tempero Bahiano</h2>
+    <p>Acesse o sistema com seu perfil.</p>
+
+    <div style="display:grid;gap:12px;">
+      <label>Perfil</label>
+      <select id="loginPerfil">
+        <option value="admin">Administrador Geral</option>
+        <option value="recepcao">Recepção</option>
+      </select>
+
+      <label>Senha</label>
+      <input id="loginSenha" type="password" placeholder="Digite sua senha" />
+
+      <button class="btn btn-primary" onclick="validarLogin()">Entrar no sistema</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+<div class="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <h1>Hotel Tempero Bahiano</h1>
+      <p>Gestão moderna de hospedagem</p>
+    </div>
+
+    <nav class="menu">
+      <button class="active" data-perfis="admin,recepcao" onclick="showPage('dashboard', this)">📊 Dashboard</button>
+      <button data-perfis="admin" onclick="showPage('quartos', this)">🛏️ Quartos</button>
+      <button data-perfis="admin" onclick="showPage('tiposDiaria', this)">💵 Tipos de Diária</button>
+      <button data-perfis="admin,recepcao" onclick="showPage('clientes', this)">👥 Hóspedes</button>
+      <button data-perfis="admin" onclick="showPage('produtos', this)">🧃 Produtos</button>
+      <button data-perfis="admin,recepcao" onclick="showPage('reservas', this)">📅 Reservas</button>
+      <button data-perfis="admin" onclick="showPage('relatorios', this)">📑 Relatórios</button>
+      <button data-perfis="admin" onclick="showPage('configuracoes', this)">⚙️ Configurações</button>
+    </nav>
+  </aside>
+
+  <div class="content">
+    <div class="topbar">
+      <div>
+        <h2 id="pageTitle">Dashboard</h2>
+        <span id="pageSubtitle">Visão geral dos quartos, reservas e pagamentos</span>
+      </div>
+      <div class="usuario-logado">
+        <span id="perfilUsuarioBadge" class="usuario-badge">Perfil</span>
+        <button class="btn-sair" type="button" onclick="sairSistema()">Sair</button>
+        <button class="btn btn-secondary mobile-menu" onclick="toggleSidebar()">Menu</button>
+      </div>
+    </div>
+
+    <main>
+      <section id="dashboard" class="active">
+        <div class="cards">
+          <div class="card">
+            <h3>Total de quartos</h3>
+            <p id="totalQuartos">0</p>
+          </div>
+          <div class="card">
+            <h3>Quartos disponíveis hoje</h3>
+            <p id="quartosLivres">0</p>
+          </div>
+          <div class="card">
+            <h3>Quartos bloqueados hoje</h3>
+            <p id="quartosOcupados">0</p>
+          </div>
+          <div class="card">
+            <h3>Aguardando pagamento</h3>
+            <p id="reservasPendentes">0</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Quartos disponíveis hoje</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Diária Base</th>
+                  <th>Status da Reserva</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardDisponiveis"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Quartos reservados ou bloqueados</h2>
+          <p class="hint">
+            Filtre por período para visualizar quartos com reservas confirmadas ou aguardando pagamento.
+            O status do quarto continua sendo calculado com base no dia de hoje.
+          </p>
+
+          <form>
+            <input id="dashboardFiltroDe" type="date" />
+            <input id="dashboardFiltroAte" type="date" />
+            <button class="btn btn-primary" type="button" onclick="renderizarDashboard()">Filtrar</button>
+            <button class="btn btn-secondary" type="button" onclick="limparFiltroDashboard()">Limpar</button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Diária Base</th>
+                  <th>Status Hoje</th>
+                  <th>Reservas</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardOcupados"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Reservas do quarto selecionado</h2>
+          <div id="detalheReservasDashboard" class="lista-reservas-dashboard">
+            <p class="hint">Clique no botão “Ver reservas” de um quarto para visualizar a lista aqui.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="tiposDiaria">
+        <div class="panel">
+          <h2>Cadastro de Tipos de Diária</h2>
+          <p class="hint">Cadastre os tipos de diária e seus valores. Estes valores serão usados na tela de reservas.</p>
+
+          <form id="formTipoDiaria">
+            <input type="hidden" id="tipoDiariaId" />
+            <input id="nomeTipoDiaria" placeholder="Tipo. Ex: Solteiro, Casal, Triplo, Quádruplo" required />
+            <input id="valorTipoDiaria" type="text" inputmode="numeric" placeholder="Valor da diária R$" required oninput="mascaraMoeda(this)" />
+            <button class="btn btn-primary" type="submit">Salvar tipo</button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tipo de Diária</th>
+                  <th>Valor</th>
+                  <th style="min-width:240px;width:240px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaTiposDiaria"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="quartos">
+        <div class="panel">
+          <h2>Gestão de Quartos</h2>
+
+          <form id="formQuarto">
+            <input type="hidden" id="quartoId" />
+            <input id="numeroQuarto" placeholder="Número do quarto" required />
+
+            <input id="diariaQuarto" type="text" inputmode="numeric" placeholder="Diária base R$" required oninput="mascaraMoeda(this)" />
+
+            <select id="statusQuarto" required onchange="alternarMotivoIndisponibilidade()">
+              <option value="Livre">Livre</option>
+              <option value="Ocupado">Ocupado</option>
+              <option value="Manutenção">Manutenção</option>
+            </select>
+
+            <input id="motivoIndisponibilidadeQuarto" placeholder="Motivo da indisponibilidade/manutenção" style="display:none;" />
+
+            <button class="btn btn-primary" type="submit">Salvar quarto</button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Diária Base</th>
+                  <th>Indisponibilidade</th>
+                  <th style="min-width:240px;width:240px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaQuartos"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="clientes">
+        <div class="panel">
+          <h2>Gestão de Hóspedes</h2>
+
+          <form id="formCliente">
+            <input type="hidden" id="clienteId" />
+            <input id="nomeCliente" placeholder="Nome completo" required />
+            <input id="documentoCliente" placeholder="CPF" maxlength="14" required oninput="mascaraCPF(this)" />
+            <input id="cidadeCliente" placeholder="Cidade" required />
+            <input id="nascimentoCliente" type="date" required />
+            <input id="telefoneCliente" placeholder="Telefone" maxlength="15" required oninput="mascaraTelefone(this)" />
+            <input id="emailCliente" type="email" placeholder="E-mail" onblur="validarEmail(this)" />
+            <button class="btn btn-primary" type="submit">Salvar cliente</button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CPF</th>
+                  <th>Cidade</th>
+                  <th>Nascimento</th>
+                  <th>Telefone</th>
+                  <th>E-mail</th>
+                  <th style="min-width:240px;width:240px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaClientes"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="produtos">
+        <div class="panel">
+          <h2>Cadastro de Produtos para Consumo</h2>
+          <p class="hint">Cadastre produtos que poderão ser adicionados ao consumo do quarto durante uma reserva confirmada.</p>
+
+          <form id="formProduto">
+            <input type="hidden" id="produtoId" />
+            <input id="nomeProduto" placeholder="Nome do produto" required />
+            <input id="categoriaProduto" placeholder="Categoria. Ex: Bebida, Alimento, Serviço" required />
+
+            <select id="tipoValorProduto" onchange="alternarValorProduto()">
+              <option value="fixo">Valor fixo</option>
+              <option value="variavel">Valor variável</option>
+            </select>
+
+            <input id="valorProduto" type="text" inputmode="numeric" placeholder="Valor R$" oninput="mascaraMoeda(this)" />
+            <button class="btn btn-primary" type="submit">Salvar produto</button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Categoria</th>
+                  <th>Valor</th>
+                  <th style="min-width:240px;width:240px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaProdutos"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="reservas">
+        <div class="panel">
+          <h2>Gestão de Reservas</h2>
+          <p class="hint">
+            O quarto fica bloqueado para novas reservas quando existir reserva confirmada ou aguardando pagamento no mesmo período.
+            As diárias começam às 12h00 da data de entrada e terminam às 12h00 da data de saída.
+          </p>
+
+          <div class="toolbar-reservas">
+            <div class="busca-box">
+              <input id="buscaReservas" placeholder="Buscar por hóspede, quarto, status, pagamento ou tipo de diária" oninput="renderizarReservas()" />
+              <input id="buscaReservaDe" type="date" onchange="renderizarReservas()" />
+              <input id="buscaReservaAte" type="date" onchange="renderizarReservas()" />
+            </div>
+            <button class="btn btn-primary" type="button" onclick="abrirModalReserva()">+ Nova reserva</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hóspede</th>
+                  <th>Quarto</th>
+                  <th>Período</th>
+                  <th>Tipo</th>
+                  <th>Status da Reserva</th>
+                  <th>Diária(s)/Consumo</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaReservas"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="relatorios">
+        <div class="panel">
+          <h2>Relatório de Reservas</h2>
+          <p class="hint">Filtre as reservas por status, período, cliente, quarto e tipo de pagamento.</p>
+
+          <form>
+            <select id="filtroStatus">
+              <option value="">Todos os status</option>
+              <option value="Aguardando pagamento">Aguardando pagamento</option>
+              <option value="Confirmada">Confirmada</option>
+              <option value="Cancelada">Cancelada</option>
+              <option value="Finalizada">Finalizada</option>
+            </select>
+
+            <select id="filtroPagamento">
+              <option value="">Todos os pagamentos</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Pix">Pix</option>
+              <option value="Contrato">Contrato</option>
+              <option value="Cartão">Cartão</option>
+            </select>
+
+            <select id="filtroCliente"></select>
+            <select id="filtroQuarto"></select>
+
+            <input id="filtroEntradaDe" type="date" />
+            <input id="filtroEntradaAte" type="date" />
+
+            <button class="btn btn-primary" type="button" onclick="renderizarRelatorio()">Filtrar</button>
+            <button class="btn btn-secondary" type="button" onclick="limparFiltrosRelatorio()">Limpar</button>
+            <button class="btn btn-warning" type="button" onclick="gerarPDFRelatorio()">Gerar PDF</button>
+          </form>
+
+          <div class="cards">
+            <div class="card">
+              <h3>Total filtrado</h3>
+              <p id="relTotal">0</p>
+            </div>
+            <div class="card">
+              <h3>Confirmadas</h3>
+              <p id="relConfirmadas">0</p>
+            </div>
+            <div class="card">
+              <h3>Pendentes</h3>
+              <p id="relPendentes">0</p>
+            </div>
+            <div class="card">
+              <h3>Canceladas</h3>
+              <p id="relCanceladas">0</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hóspede</th>
+                  <th>Quarto</th>
+                  <th>Entrada</th>
+                  <th>Saída</th>
+                  <th>Status</th>
+                  <th>Forma de Pagamento</th>
+                  <th>Motivo de Cancelamento</th>
+                  <th>Criada em</th>
+                </tr>
+              </thead>
+              <tbody id="listaRelatorioReservas"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Histórico de Reservas por Hóspede</h2>
+          <p class="hint">Selecione um hóspede para visualizar todo o histórico de reservas, consumos e valores.</p>
+
+          <form>
+            <select id="historicoClienteSelect"></select>
+            <button class="btn btn-primary" type="button" onclick="renderizarHistoricoCliente()">Buscar histórico</button>
+            <button class="btn btn-secondary" type="button" onclick="limparHistoricoCliente()">Limpar</button>
+          </form>
+
+          <div class="cards">
+            <div class="card">
+              <h3>Total de reservas</h3>
+              <p id="histTotalReservas">0</p>
+            </div>
+            <div class="card">
+              <h3>Valor em reservas</h3>
+              <p id="histValorReservas">R$ 0</p>
+            </div>
+            <div class="card">
+              <h3>Valor em consumo</h3>
+              <p id="histValorConsumo">R$ 0</p>
+            </div>
+            <div class="card">
+              <h3>Total geral</h3>
+              <p id="histTotalGeral">R$ 0</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hóspede</th>
+                  <th>Quarto</th>
+                  <th>Tipo de Diária</th>
+                  <th>Entrada</th>
+                  <th>Saída</th>
+                  <th>Status</th>
+                  <th>Valor Reserva</th>
+                  <th>Consumo</th>
+                  <th>Total</th>
+                  <th>Pagamento</th>
+                  <th>Motivo Cancelamento</th>
+                </tr>
+              </thead>
+              <tbody id="listaHistoricoCliente"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="configuracoes">
+        <div class="panel">
+          <h2>Cadastro da Empresa</h2>
+          <p class="hint">Estas informações serão exibidas nas impressões dos relatórios e cupons do sistema.</p>
+
+          <form id="formEmpresa">
+            <input id="empresaNome" placeholder="Nome da empresa" required />
+            <input id="empresaCnpj" placeholder="CNPJ" maxlength="18" oninput="mascaraCNPJ(this)" />
+            <input id="empresaTelefone" placeholder="Telefone" maxlength="15" oninput="mascaraTelefone(this)" />
+            <input id="empresaEmail" type="email" placeholder="E-mail" />
+            <input id="empresaEndereco" placeholder="Endereço" />
+            <input id="empresaCidade" placeholder="Cidade/UF" />
+
+            <div class="logo-config-box">
+              <label style="font-weight:800;color:#334155;">Logo da empresa para relatórios e cupons</label>
+              <input id="empresaLogo" type="file" accept="image/*" onchange="carregarLogoEmpresa(event)" />
+              <img id="previewLogoEmpresa" class="logo-preview" alt="Prévia da logo em preto e branco" />
+              <button class="btn btn-secondary" type="button" onclick="removerLogoEmpresa()">Remover logo</button>
+              <p class="hint" style="margin:0;">A logo será salva no navegador e impressa em preto e branco.</p>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Salvar empresa</button>
+          </form>
+
+          <div class="panel" style="box-shadow:none;margin:0;background:#f8fafc;">
+            <h2 style="font-size:16px;">Prévia da impressão</h2>
+            <p id="previewEmpresa" class="hint" style="margin:0;"></p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Configurações de Pagamento</h2>
+          <p class="hint">Defina por quanto tempo uma reserva pode ficar como “Aguardando pagamento”.</p>
+
+          <form id="formConfig">
+            <input id="tempoPagamento" type="number" min="1" placeholder="Tempo em horas" required />
+            <button class="btn btn-primary" type="submit">Salvar configuração</button>
+          </form>
+
+          <p>Tempo atual: <strong id="tempoAtualPagamento">0</strong> hora(s)</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+
+
+
+
+<div id="modalCheckoutReserva" class="modal-overlay">
+  <div class="modal" style="width:min(860px,100%);">
+    <div class="modal-header">
+      <h3>Checkout da reserva</h3>
+      <button class="modal-close" type="button" onclick="fecharModalCheckoutReserva()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="checkoutReservaId" />
+
+      <div id="checkoutDetalhesReserva" class="checkout-detalhes-grid"></div>
+
+      <div class="desconto-box">
+        <h4>Desconto no ato do pagamento</h4>
+        <div class="reserva-form-modal">
+          <select id="checkoutTipoDesconto" onchange="atualizarResumoCheckoutPagamento()">
+            <option value="">Sem desconto</option>
+            <option value="valor">Desconto em R$</option>
+            <option value="percentual">Desconto em %</option>
+          </select>
+
+          <input id="checkoutDescontoValor" type="text" inputmode="numeric" placeholder="Valor do desconto" oninput="mascaraDescontoCheckout(this); atualizarResumoCheckoutPagamento();" />
+
+          <select id="checkoutMotivoDesconto" onchange="alternarOutroMotivoDesconto()">
+            <option value="">Motivo do desconto</option>
+            <option value="Cortesia comercial">Cortesia comercial</option>
+            <option value="Ajuste por reclamação do hóspede">Ajuste por reclamação do hóspede</option>
+            <option value="Erro no lançamento">Erro no lançamento</option>
+            <option value="Negociação com o hóspede">Negociação com o hóspede</option>
+            <option value="Desconto por contrato/parceria">Desconto por contrato/parceria</option>
+            <option value="Compensação por manutenção">Compensação por manutenção</option>
+            <option value="Outro">Outro motivo</option>
+          </select>
+
+          <input id="checkoutOutroMotivoDesconto" placeholder="Informe o outro motivo" style="display:none;" />
+
+          <div class="checkout-pagamento-box">
+            <h4>Pagamento do saldo em aberto</h4>
+            <select id="checkoutFormaPagamento" required>
+              <option value="">Selecione o meio de pagamento do saldo em aberto</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Pix">Pix</option>
+              <option value="Contrato">Contrato</option>
+              <option value="Cartão">Cartão</option>
+            </select>
+            <p class="hint" style="margin:8px 0 0;">Este campo registra como será pago o valor que ainda está em aberto no checkout.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkout-resumo">
+        <div><span>Saldo em aberto antes do desconto</span><strong id="checkoutAbertoAntes">R$ 0,00</strong></div>
+        <div><span>Desconto aplicado</span><strong id="checkoutDescontoAplicado">R$ 0,00</strong></div>
+        <div><span>Valor a pagar no checkout</span><strong id="checkoutTotalPagar">R$ 0,00</strong></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" onclick="fecharModalCheckoutReserva()">Voltar</button>
+      <button class="btn btn-warning" type="button" onclick="imprimirConsumoReserva(Number($('checkoutReservaId').value))">Imprimir cupom</button>
+      <button class="btn btn-primary" type="button" onclick="confirmarCheckoutReserva()">Confirmar checkout</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalReserva" class="modal-overlay">
+  <div class="modal" style="width:min(780px,100%);">
+    <div class="modal-header">
+      <h3 id="tituloModalReserva">Nova reserva</h3>
+      <button class="modal-close" type="button" onclick="fecharModalReserva()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formReserva" class="reserva-form-modal">
+        <input type="hidden" id="reservaId" />
+        <select id="clienteReserva" required></select>
+        <select id="quartoReserva" required></select>
+        <select id="tipoDiariaReserva" required onchange="atualizarValorReservaSugerido()"></select>
+        <input id="valorDiariaReserva" type="text" placeholder="Valor da diária R$" readonly />
+        <input id="entradaReserva" type="date" required onchange="atualizarValorReservaSugerido()" />
+        <input id="saidaReserva" type="date" required onchange="atualizarValorReservaSugerido()" />
+
+        <select id="statusReserva" required>
+          <option value="Aguardando pagamento">Aguardando pagamento</option>
+          <option value="Confirmada">Pago / Confirmada</option>
+          <option value="Cancelada">Cancelada</option>
+          <option value="Finalizada">Finalizada</option>
+        </select>
+
+        <select id="tipoPagamentoReserva">
+          <option value="">Tipo de pagamento</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Pix">Pix</option>
+          <option value="Contrato">Contrato</option>
+          <option value="Cartão">Cartão</option>
+        </select>
+
+        <input id="valorReserva" type="text" inputmode="numeric" placeholder="Valor da reserva R$" required oninput="mascaraMoeda(this); atualizarResumoCheckoutReserva();" />
+
+        <div class="hospedes-adicionais-box">
+          <h4>Hóspedes adicionais no mesmo quarto</h4>
+          <div class="reserva-form-modal">
+            <input id="quantidadeHospedesAdicionais" type="number" min="0" value="0" placeholder="Quantidade de hóspedes adicionais" onchange="gerarCamposHospedesAdicionais()" oninput="gerarCamposHospedesAdicionais()" />
+            <button class="btn btn-secondary" type="button" onclick="gerarCamposHospedesAdicionais()">Gerar campos</button>
+          </div>
+          <div id="camposHospedesAdicionais"></div>
+        </div>
+
+
+        <div class="desconto-box">
+          <h4>Oferta de desconto</h4>
+          <div class="reserva-form-modal">
+            <select id="tipoDescontoReserva" onchange="atualizarResumoCheckoutReserva()">
+              <option value="">Sem desconto</option>
+              <option value="valor">Desconto em R$</option>
+              <option value="percentual">Desconto em %</option>
+            </select>
+            <input id="descontoReserva" type="text" inputmode="numeric" placeholder="Valor do desconto" oninput="mascaraDescontoReserva(this); atualizarResumoCheckoutReserva();" />
+          </div>
+        </div>
+
+        <div class="checkout-resumo">
+          <div><span>Valor da diária</span><strong id="resumoValorDiariaReserva">R$ 0,00</strong></div>
+          <div><span>Subtotal das diárias</span><strong id="resumoSubtotalReserva">R$ 0,00</strong></div>
+          <div><span>Desconto</span><strong id="resumoDescontoReserva">R$ 0,00</strong></div>
+          <div><span>Total após desconto</span><strong id="resumoTotalReserva">R$ 0,00</strong></div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" onclick="fecharModalReserva()">Cancelar</button>
+      <button class="btn btn-warning" type="button" onclick="checkoutReserva()">Checkout / Finalizar</button>
+      <button class="btn btn-primary" type="submit" form="formReserva">Salvar reserva</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalDetalhesReserva" class="modal-overlay">
+  <div class="modal" style="width:min(760px,100%);">
+    <div class="modal-header">
+      <h3>Detalhes da reserva</h3>
+      <button class="modal-close" type="button" onclick="fecharModalDetalhesReserva()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div id="conteudoDetalhesReserva"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" onclick="fecharModalDetalhesReserva()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalConsumo" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Adicionar consumo ao quarto</h3>
+      <button class="modal-close" type="button" onclick="fecharModalConsumo()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="consumoReservaId" />
+
+      <p id="infoConsumoReserva" class="hint" style="margin:0;"></p>
+
+      <select id="produtoConsumoSelect" onchange="atualizarValorConsumo()">
+        <option value="">Selecione o produto</option>
+      </select>
+
+      <input id="quantidadeConsumo" type="number" min="1" value="1" placeholder="Quantidade" oninput="atualizarValorConsumo()" />
+
+      <input id="valorUnitarioConsumo" type="text" inputmode="numeric" placeholder="Valor unitário R$" oninput="mascaraMoeda(this); atualizarTotalConsumo();" />
+
+      <input id="totalConsumo" type="text" placeholder="Total R$" readonly />
+
+      <textarea id="observacaoConsumo" placeholder="Observação opcional"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" onclick="fecharModalConsumo()">Voltar</button>
+      <button class="btn btn-primary" type="button" onclick="confirmarConsumoReserva()">Adicionar consumo</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalCancelamento" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Cancelar reserva</h3>
+      <button class="modal-close" type="button" onclick="fecharModalCancelamento()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="cancelamentoReservaId" />
+
+      <p class="hint" style="margin:0;">
+        Selecione o motivo do cancelamento. Caso escolha “Outro”, informe a justificativa no campo abaixo.
+      </p>
+
+      <select id="motivoCancelamentoSelect" onchange="alternarOutroMotivoCancelamento()">
+        <option value="">Selecione o motivo</option>
+        <option value="Cliente desistiu">Cliente desistiu</option>
+        <option value="Problema no pagamento">Problema no pagamento</option>
+        <option value="Erro na reserva">Erro na reserva</option>
+        <option value="Solicitação do cliente">Solicitação do cliente</option>
+        <option value="Overbooking">Overbooking</option>
+        <option value="Manutenção do quarto">Manutenção do quarto</option>
+        <option value="Outro">Outro motivo</option>
+      </select>
+
+      <textarea id="outroMotivoCancelamento" placeholder="Descreva o motivo do cancelamento" style="display:none;"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" onclick="fecharModalCancelamento()">Voltar</button>
+      <button class="btn btn-danger" type="button" onclick="confirmarCancelamentoReserva()">Confirmar cancelamento</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics-compat.js"></script>
+
+<script>
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWYBN_cqnwNYxZQIKZnsSE3EkhL9cKTZo",
+    authDomain: "pdv-loja-dd0db.firebaseapp.com",
+    databaseURL: "https://pdv-loja-dd0db-default-rtdb.firebaseio.com",
+    projectId: "pdv-loja-dd0db",
+    storageBucket: "pdv-loja-dd0db.firebasestorage.app",
+    messagingSenderId: "1075356762688",
+    appId: "1:1075356762688:web:831718db991830d31155a5",
+    measurementId: "G-6P5EPTC2GD"
+  };
+
+  const firebaseApp = firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  try {
+    if (firebase.analytics) {
+      firebase.analytics();
+    }
+  } catch (error) {
+    console.warn('Analytics não iniciado:', error);
+  }
+
+  const firebasePath = 'hotel_tempero_bahiano';
+  let dadosCarregadosFirebase = false;
+  let salvandoFirebase = false;
+
+  let config = JSON.parse(localStorage.getItem('configHotel')) || {
+    horasPagamento: 2,
+    empresa: {
+      nome: 'Hotel Tempero Bahiano',
+      cnpj: '',
+      telefone: '',
+      email: '',
+      endereco: '',
+      cidade: '',
+      logo: ''
+    }
+  };
+
+  if (!config.empresa) {
+    config.empresa = {
+      nome: 'Hotel Tempero Bahiano',
+      cnpj: '',
+      telefone: '',
+      email: '',
+      endereco: '',
+      cidade: '',
+      logo: ''
+    };
+  }
+
+  let quartos = JSON.parse(localStorage.getItem('quartosHotel')) || [
+    { id: 1, numero: '101', diaria: 180, status: 'Livre' },
+    { id: 2, numero: '102', diaria: 250, status: 'Livre' },
+    { id: 3, numero: '201', diaria: 420, status: 'Livre' }
+  ];
+
+  let tiposDiaria = JSON.parse(localStorage.getItem('tiposDiariaHotel')) || [
+    { id: 1, nome: 'Solteiro', valor: 180 },
+    { id: 2, nome: 'Casal', valor: 250 },
+    { id: 3, nome: 'Triplo', valor: 320 },
+    { id: 4, nome: 'Quádruplo', valor: 400 }
+  ];
+
+  let clientes = JSON.parse(localStorage.getItem('clientesHotel')) || [
+    { id: 1, nome: 'Maria Silva', documento: '000.000.000-00', cidade: 'Salvador', nascimento: '1990-01-01', telefone: '(82) 99999-9999', email: 'maria@email.com' }
+  ];
+
+  let reservas = JSON.parse(localStorage.getItem('reservasHotel')) || [];
+  let produtos = JSON.parse(localStorage.getItem('produtosHotel')) || [
+    { id: 1, nome: 'Água mineral', categoria: 'Bebida', tipoValor: 'fixo', valor: 5 },
+    { id: 2, nome: 'Refrigerante lata', categoria: 'Bebida', tipoValor: 'fixo', valor: 8 },
+    { id: 3, nome: 'Produto com valor variável', categoria: 'Serviço', tipoValor: 'variavel', valor: 0 }
+  ];
+  let consumos = JSON.parse(localStorage.getItem('consumosHotel')) || [];
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  let perfilAtual = localStorage.getItem('perfilHotel') || '';
+
+  const perfisSistema = {
+    admin: {
+      nome: 'Administrador Geral',
+      paginas: ['dashboard', 'quartos', 'tiposDiaria', 'clientes', 'produtos', 'reservas', 'relatorios', 'configuracoes'],
+      paginaInicial: 'dashboard'
+    },
+    recepcao: {
+      nome: 'Recepção',
+      paginas: ['dashboard', 'clientes', 'reservas'],
+      paginaInicial: 'dashboard'
+    }
+  };
+
+  
+  function validarLogin() {
+    const perfil = $('loginPerfil').value;
+    const senha = $('loginSenha').value;
+
+    const credenciais = {
+      admin: '123456',
+      recepcao: '654321'
+    };
+
+    if (senha !== credenciais[perfil]) {
+      alert('Senha inválida.');
+      return;
+    }
+
+    entrarSistema(perfil);
+  }
+
+  function entrarSistema(perfil) {
+    perfilAtual = perfil;
+    localStorage.setItem('perfilHotel', perfil);
+    aplicarPermissoes();
+  }
+
+  function sairSistema() {
+    localStorage.removeItem('perfilHotel');
+    perfilAtual = '';
+    $('loginOverlay').style.display = 'flex';
+  }
+
+  function usuarioPodeAcessar(pagina) {
+    return perfilAtual && perfisSistema[perfilAtual]?.paginas.includes(pagina);
+  }
+
+  function aplicarPermissoes() {
+    if (!perfilAtual || !perfisSistema[perfilAtual]) {
+      $('loginOverlay').style.display = 'flex';
+      return;
+    }
+
+    $('loginOverlay').style.display = 'none';
+
+    if ($('perfilUsuarioBadge')) {
+      $('perfilUsuarioBadge').textContent = perfisSistema[perfilAtual].nome;
+    }
+
+    document.querySelectorAll('.menu button').forEach(botao => {
+      const perfisPermitidos = (botao.dataset.perfis || '').split(',').map(item => item.trim());
+      botao.style.display = perfisPermitidos.includes(perfilAtual) ? 'block' : 'none';
+      botao.classList.remove('active');
+    });
+
+    const paginaAtiva = document.querySelector('section.active')?.id;
+
+    if (!paginaAtiva || !usuarioPodeAcessar(paginaAtiva)) {
+      const paginaInicial = perfisSistema[perfilAtual].paginaInicial;
+      const botaoInicial = document.querySelector(`.menu button[onclick*="'${paginaInicial}'"]`);
+      if (botaoInicial) {
+        showPage(paginaInicial, botaoInicial);
+      }
+    }
+  }
+
+
+  function salvarDados() {
+    const dados = {
+      config,
+      quartos,
+      tiposDiaria,
+      clientes,
+      produtos,
+      reservas,
+      consumos,
+      atualizadoEm: new Date().toISOString()
+    };
+
+    localStorage.setItem('quartosHotel', JSON.stringify(quartos));
+    localStorage.setItem('tiposDiariaHotel', JSON.stringify(tiposDiaria));
+    localStorage.setItem('clientesHotel', JSON.stringify(clientes));
+    localStorage.setItem('produtosHotel', JSON.stringify(produtos));
+    localStorage.setItem('consumosHotel', JSON.stringify(consumos));
+    localStorage.setItem('reservasHotel', JSON.stringify(reservas));
+    localStorage.setItem('configHotel', JSON.stringify(config));
+
+    if (!dadosCarregadosFirebase || salvandoFirebase) return;
+
+    salvandoFirebase = true;
+
+    database.ref(firebasePath).set(dados)
+      .catch(error => {
+        console.error('Erro ao salvar no Firebase:', error);
+        alert('Não foi possível salvar no Firebase. Os dados foram mantidos localmente neste navegador.');
+      })
+      .finally(() => {
+        salvandoFirebase = false;
+      });
+  }
+
+  function carregarDadosFirebase() {
+    database.ref(firebasePath).once('value')
+      .then(snapshot => {
+        const dados = snapshot.val();
+
+        if (dados) {
+          config = dados.config || config;
+          quartos = Array.isArray(dados.quartos) ? dados.quartos : quartos;
+          tiposDiaria = Array.isArray(dados.tiposDiaria) ? dados.tiposDiaria : tiposDiaria;
+          clientes = Array.isArray(dados.clientes) ? dados.clientes : clientes;
+          produtos = Array.isArray(dados.produtos) ? dados.produtos : produtos;
+          reservas = Array.isArray(dados.reservas) ? dados.reservas : reservas;
+          consumos = Array.isArray(dados.consumos) ? dados.consumos : consumos;
+
+          localStorage.setItem('quartosHotel', JSON.stringify(quartos));
+          localStorage.setItem('tiposDiariaHotel', JSON.stringify(tiposDiaria));
+          localStorage.setItem('clientesHotel', JSON.stringify(clientes));
+          localStorage.setItem('produtosHotel', JSON.stringify(produtos));
+          localStorage.setItem('consumosHotel', JSON.stringify(consumos));
+          localStorage.setItem('reservasHotel', JSON.stringify(reservas));
+          localStorage.setItem('configHotel', JSON.stringify(config));
+        } else {
+          database.ref(firebasePath).set({
+            config,
+            quartos,
+            tiposDiaria,
+            clientes,
+            produtos,
+            reservas,
+            consumos,
+            criadoEm: new Date().toISOString()
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao carregar Firebase:', error);
+        alert('Não foi possível conectar ao Firebase. O sistema continuará usando os dados locais deste navegador.');
+      })
+      .finally(() => {
+        dadosCarregadosFirebase = true;
+        renderizar();
+        aplicarPermissoes();
+        iniciarSincronizacaoFirebase();
+      });
+  }
+
+  function iniciarSincronizacaoFirebase() {
+    database.ref(firebasePath).on('value', snapshot => {
+      if (salvandoFirebase || !dadosCarregadosFirebase) return;
+
+      const dados = snapshot.val();
+      if (!dados) return;
+
+      config = dados.config || config;
+      quartos = Array.isArray(dados.quartos) ? dados.quartos : quartos;
+      tiposDiaria = Array.isArray(dados.tiposDiaria) ? dados.tiposDiaria : tiposDiaria;
+      clientes = Array.isArray(dados.clientes) ? dados.clientes : clientes;
+      produtos = Array.isArray(dados.produtos) ? dados.produtos : produtos;
+      reservas = Array.isArray(dados.reservas) ? dados.reservas : reservas;
+      consumos = Array.isArray(dados.consumos) ? dados.consumos : consumos;
+
+      renderizar();
+    });
+  }
+
+  function apenasNumeros(valor) {
+    return String(valor || '').replace(/[^0-9]/g, '');
+  }
+
+  function moedaParaNumero(valor) {
+    return Number(apenasNumeros(valor)) / 100;
+  }
+
+  function numeroParaMoeda(valor) {
+    return Number(valor || 0).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  }
+
+  function mascaraMoeda(campo) {
+    campo.value = numeroParaMoeda(moedaParaNumero(campo.value));
+  }
+
+  function mascaraCPF(campo) {
+    let valor = apenasNumeros(campo.value).slice(0, 11);
+    valor = valor.replace(/([0-9]{3})([0-9])/, '$1.$2');
+    valor = valor.replace(/([0-9]{3})([0-9])/, '$1.$2');
+    valor = valor.replace(/([0-9]{3})([0-9]{1,2})$/, '$1-$2');
+    campo.value = valor;
+  }
+
+  function mascaraCNPJ(campo) {
+    let valor = apenasNumeros(campo.value).slice(0, 14);
+    valor = valor.replace(/([0-9]{2})([0-9])/, '$1.$2');
+    valor = valor.replace(/([0-9]{3})([0-9])/, '$1.$2');
+    valor = valor.replace(/([0-9]{3})([0-9])/, '$1/$2');
+    valor = valor.replace(/([0-9]{4})([0-9]{1,2})$/, '$1-$2');
+    campo.value = valor;
+  }
+
+  function mascaraTelefone(campo) {
+    let valor = apenasNumeros(campo.value).slice(0, 11);
+
+    if (valor.length <= 10) {
+      valor = valor.replace(/([0-9]{2})([0-9])/, '($1) $2');
+      valor = valor.replace(/([0-9]{4})([0-9])/, '$1-$2');
+    } else {
+      valor = valor.replace(/([0-9]{2})([0-9])/, '($1) $2');
+      valor = valor.replace(/([0-9]{5})([0-9])/, '$1-$2');
+    }
+
+    campo.value = valor;
+  }
+
+  function validarEmail(campo) {
+    if (!campo.value) return true;
+
+    const valido = /^[^@ ]+@[^@ ]+[.][^@ ]{2,}$/.test(campo.value);
+
+    if (!valido) {
+      alert('Informe um e-mail válido. Exemplo: cliente@email.com');
+      campo.focus();
+      return false;
+    }
+
+    return true;
+  }
+
+  function iconEdit() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+  }
+
+  function iconTrash() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`;
+  }
+
+  function iconCancel() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>`;
+  }
+
+  function iconMoney() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 12h.01"/><path d="M17 12h.01"/><circle cx="12" cy="12" r="2.5"/></svg>`;
+  }
+
+  function iconCheckout() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`;
+  }
+
+  function iconConsumo() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 2h12"/><path d="M8 2v6a4 4 0 0 0 8 0V2"/><path d="M12 12v8"/><path d="M9 22h6"/></svg>`;
+  }
+
+  function iconPrint() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>`;
+  }
+
+  function iconCheck() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`;
+  }
+
+  function iconDetails() {
+    return `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`;
+  }
+
+  function toggleSidebar() {
+    $('sidebar').classList.toggle('open');
+  }
+
+  function showPage(id, botao) {
+    if (perfilAtual && !usuarioPodeAcessar(id)) {
+      alert('Seu perfil não possui acesso a esta tela.');
+      return;
+    }
+
+    document.querySelectorAll('section').forEach(secao => secao.classList.remove('active'));
+    document.querySelectorAll('.menu button').forEach(btn => btn.classList.remove('active'));
+
+    $(id).classList.add('active');
+    botao.classList.add('active');
+    $('sidebar').classList.remove('open');
+
+    const titulos = {
+      dashboard: ['Dashboard', 'Visão geral dos quartos, reservas e pagamentos'],
+      quartos: ['Quartos', 'Cadastro e controle de disponibilidade'],
+      tiposDiaria: ['Tipos de Diária', 'Cadastro de valores por tipo de diária'],
+      clientes: ['Clientes', 'Cadastro e gestão dos hóspedes'],
+      produtos: ['Produtos', 'Cadastro de produtos para consumo no quarto'],
+      reservas: ['Reservas', 'Controle de reservas, pagamento e ocupação'],
+      relatorios: ['Relatórios', 'Relatório de reservas com filtros'],
+      configuracoes: ['Configurações', 'Prazo para reservas aguardando pagamento']
+    };
+
+    $('pageTitle').textContent = titulos[id][0];
+    $('pageSubtitle').textContent = titulos[id][1];
+
+    renderizar();
+  }
+
+  function classeStatus(status) {
+    return status
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/ç/g, 'c')
+      .replace(/ /g, '-');
+  }
+
+  function badgeStatus(status) {
+    return `<span class="badge ${classeStatus(status)}">${status}</span>`;
+  }
+
+  function formatarDataBR(data) {
+    if (!data) return '-';
+
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  function formatarDataHoraReserva(data) {
+    return `${formatarDataBR(data)} às 12h00`;
+  }
+
+  function calcularDiarias(entrada, saida) {
+    if (!entrada || !saida) return 0;
+
+    const inicio = dataHoraReserva(entrada);
+    const fim = dataHoraReserva(saida);
+    const diferenca = fim - inicio;
+
+    if (diferenca <= 0) return 0;
+
+    return Math.ceil(diferenca / (1000 * 60 * 60 * 24));
+  }
+
+  function valorSugeridoReserva(tipoDiariaId, entrada, saida) {
+    const tipo = tiposDiaria.find(item => item.id === Number(tipoDiariaId));
+
+    if (!tipo) return 0;
+
+    return calcularDiarias(entrada, saida) * Number(tipo.valor || 0);
+  }
+
+  function atualizarValorReservaSugerido() {
+    const idReserva = $('reservaId')?.value;
+    const tipoDiariaId = $('tipoDiariaReserva')?.value;
+    const entrada = $('entradaReserva')?.value;
+    const saida = $('saidaReserva')?.value;
+    const tipo = tiposDiaria.find(item => item.id === Number(tipoDiariaId));
+
+    if ($('valorDiariaReserva')) {
+      $('valorDiariaReserva').value = tipo ? numeroParaMoeda(tipo.valor) : '';
+    }
+
+    if (idReserva) {
+      atualizarResumoCheckoutReserva();
+      return;
+    }
+
+    if (!tipoDiariaId || !entrada || !saida) return;
+
+    const valor = valorSugeridoReserva(tipoDiariaId, entrada, saida);
+
+    if (valor > 0) {
+      $('valorReserva').value = numeroParaMoeda(valor);
+      atualizarResumoCheckoutReserva();
+    }
+  }
+
+  function hojeISO() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function amanhaISO() {
+    const data = new Date();
+    data.setDate(data.getDate() + 1);
+    return data.toISOString().slice(0, 10);
+  }
+
+  function dataHoraReserva(data) {
+    return new Date(`${data}T12:00:00`);
+  }
+
+  function datasSobrepostas(inicioA, fimA, inicioB, fimB) {
+    return dataHoraReserva(inicioA) < dataHoraReserva(fimB) &&
+           dataHoraReserva(fimA) > dataHoraReserva(inicioB);
+  }
+
+  function quartoBloqueadoNoPeriodo(quartoId, entrada, saida, reservaIgnoradaId = null) {
+    return reservas.some(reserva =>
+      reserva.id !== reservaIgnoradaId &&
+      reserva.quartoId === quartoId &&
+      ['Confirmada', 'Aguardando pagamento'].includes(reserva.status) &&
+      datasSobrepostas(entrada, saida, reserva.entrada, reserva.saida)
+    );
+  }
+
+  function disponibilidadeQuarto(quartoId) {
+    const reservasAtivas = reservas
+      .filter(reserva =>
+        reserva.quartoId === quartoId &&
+        ['Confirmada', 'Aguardando pagamento'].includes(reserva.status)
+      )
+      .sort((a, b) => dataHoraReserva(a.saida) - dataHoraReserva(b.saida));
+
+    if (reservasAtivas.length === 0) return null;
+
+    const ultimaReserva = reservasAtivas[reservasAtivas.length - 1];
+    return `${ultimaReserva.saida} às 12h00`;
+  }
+
+  function periodoReservaQuarto(quartoId) {
+    const hoje = hojeISO();
+    const amanha = amanhaISO();
+
+    const reservasDoQuarto = reservas
+      .filter(item =>
+        item.quartoId === quartoId &&
+        ['Confirmada', 'Aguardando pagamento'].includes(item.status) &&
+        datasSobrepostas(hoje, amanha, item.entrada, item.saida)
+      )
+      .sort((a, b) => dataHoraReserva(a.entrada) - dataHoraReserva(b.entrada));
+
+    if (reservasDoQuarto.length === 0) return '-';
+
+    return reservasDoQuarto
+      .map(item => {
+        const cliente = clientes.find(cliente => cliente.id === item.clienteId);
+        const nomeCliente = cliente ? cliente.nome : 'Hóspede removido';
+        return `<div style="margin-bottom:6px;">
+          <strong>${nomeCliente}</strong><br>
+          ${item.entrada} às 12h00 → ${item.saida} às 12h00<br>
+          <small>${item.status}${item.tipoPagamento ? ' • ' + item.tipoPagamento : ''}</small>
+        </div>`;
+      })
+      .join('');
+  }
+
+  function detalheDisponibilidadeQuarto(quarto) {
+    if (quarto.status !== 'Ocupado') return '';
+
+    const disponibilidade = disponibilidadeQuarto(quarto.id);
+
+    if (!disponibilidade) return '';
+
+    return `<div style="font-size:12px;color:#64748b;margin-top:4px;">Disponível em: ${disponibilidade}</div>`;
+  }
+
+  function reservaExpirada(reserva) {
+    if (reserva.status !== 'Aguardando pagamento' || !reserva.criadaEm) return false;
+
+    const limite = new Date(reserva.criadaEm).getTime() + config.horasPagamento * 60 * 60 * 1000;
+    return Date.now() > limite;
+  }
+
+  function cancelarReservasExpiradas() {
+    reservas = reservas.map(reserva => {
+      if (reservaExpirada(reserva)) {
+        return {
+          ...reserva,
+          status: 'Cancelada',
+          motivoCancelamento: 'Prazo de pagamento expirado',
+          expirada: true
+        };
+      }
+
+      return reserva;
+    });
+  }
+
+  function formatarExpiracao(reserva) {
+    if (reserva.status !== 'Aguardando pagamento' || !reserva.criadaEm) return '-';
+
+    const limite = new Date(new Date(reserva.criadaEm).getTime() + config.horasPagamento * 60 * 60 * 1000);
+    return limite.toLocaleString('pt-BR');
+  }
+
+  function atualizarStatusQuartos() {
+    const hoje = hojeISO();
+    const amanha = amanhaISO();
+
+    quartos = quartos.map(quarto => {
+      if (quarto.status === 'Manutenção') return quarto;
+
+      const bloqueadoHoje = reservas.some(reserva =>
+        reserva.quartoId === quarto.id &&
+        ['Confirmada', 'Aguardando pagamento'].includes(reserva.status) &&
+        datasSobrepostas(hoje, amanha, reserva.entrada, reserva.saida)
+      );
+
+      return {
+        ...quarto,
+        status: bloqueadoHoje ? 'Ocupado' : 'Livre'
+      };
+    });
+  }
+
+  function alternarMotivoIndisponibilidade() {
+    const status = $('statusQuarto').value;
+    const campo = $('motivoIndisponibilidadeQuarto');
+
+    if (!campo) return;
+
+    campo.style.display = status === 'Manutenção' ? 'block' : 'none';
+
+    if (status !== 'Manutenção') {
+      campo.value = '';
+    }
+  }
+
+  function indisponibilidadeQuartoTexto(quarto) {
+    if (quarto.status !== 'Manutenção') return '-';
+
+    return quarto.motivoIndisponibilidade
+      ? `<strong>Manutenção</strong><br><span style="font-size:12px;color:#64748b;">${quarto.motivoIndisponibilidade}</span>`
+      : '<strong>Manutenção</strong>';
+  }
+
+  function liberarQuartoManutencao(id) {
+    const quarto = quartos.find(item => item.id === id);
+
+    if (!quarto) return;
+
+    if (!confirm(`Liberar o quarto ${quarto.numero} e remover o status de manutenção?`)) return;
+
+    quartos = quartos.map(item =>
+      item.id === id
+        ? { ...item, status: 'Livre', motivoIndisponibilidade: '' }
+        : item
+    );
+
+    salvarDados();
+    renderizar();
+  }
+
+
+  function renderizarTiposDiaria() {
+    $('listaTiposDiaria').innerHTML = tiposDiaria.map(tipo => `
+      <tr>
+        <td class="text-center">${tipo.nome}</td>
+        <td class="text-right">${numeroParaMoeda(tipo.valor)}</td>
+        <td class="actions text-center">
+          <button class="btn icon-btn btn-soft-neutral" data-tooltip="Editar" title="Editar" onclick="editarTipoDiaria(${tipo.id})">${iconEdit()}</button>
+          <button class="btn icon-btn btn-soft-danger" data-tooltip="Excluir" title="Excluir" onclick="excluirTipoDiaria(${tipo.id})">${iconTrash()}</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="3">Nenhum tipo de diária cadastrado.</td></tr>';
+  }
+
+  document.getElementById('formTipoDiaria').addEventListener('submit', event => {
+    event.preventDefault();
+
+    const id = $('tipoDiariaId').value;
+
+    const tipo = {
+      id: id ? Number(id) : Date.now(),
+      nome: $('nomeTipoDiaria').value,
+      valor: moedaParaNumero($('valorTipoDiaria').value)
+    };
+
+    tiposDiaria = id
+      ? tiposDiaria.map(item => item.id === Number(id) ? tipo : item)
+      : [...tiposDiaria, tipo];
+
+    event.target.reset();
+    $('tipoDiariaId').value = '';
+
+    salvarDados();
+    renderizar();
+  });
+
+  function editarTipoDiaria(id) {
+    const tipo = tiposDiaria.find(item => item.id === id);
+    if (!tipo) return;
+
+    $('tipoDiariaId').value = tipo.id;
+    $('nomeTipoDiaria').value = tipo.nome;
+    $('valorTipoDiaria').value = numeroParaMoeda(tipo.valor);
+  }
+
+  function excluirTipoDiaria(id) {
+    const usadoEmReserva = reservas.some(reserva => reserva.tipoDiariaId === id);
+
+    if (usadoEmReserva) {
+      alert('Este tipo de diária já foi usado em reservas e não pode ser excluído.');
+      return;
+    }
+
+    if (!confirm('Deseja excluir este tipo de diária?')) return;
+
+    tiposDiaria = tiposDiaria.filter(tipo => tipo.id !== id);
+
+    salvarDados();
+    renderizar();
+  }
+
+  function renderizarQuartos() {
+    $('listaQuartos').innerHTML = quartos.map(quarto => `
+      <tr>
+        <td class="text-center">${quarto.numero}</td>
+        <td class="text-right">${numeroParaMoeda(quarto.diaria)}</td>
+        <td class="text-center">${indisponibilidadeQuartoTexto(quarto)}</td>
+        <td class="actions text-center">
+          ${quarto.status === 'Manutenção'
+            ? `<button class="btn icon-btn btn-soft-primary" data-tooltip="Liberar quarto" title="Liberar quarto" onclick="liberarQuartoManutencao(${quarto.id})">${iconCheck()}</button>`
+            : ''
+          }
+          <button class="btn icon-btn btn-soft-neutral" data-tooltip="Editar" title="Editar" onclick="editarQuarto(${quarto.id})">${iconEdit()}</button>
+          <button class="btn icon-btn btn-soft-danger" data-tooltip="Excluir" title="Excluir" onclick="excluirQuarto(${quarto.id})">${iconTrash()}</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="4">Nenhum quarto cadastrado.</td></tr>';
+  }
+
+  document.getElementById('formQuarto').addEventListener('submit', event => {
+    event.preventDefault();
+
+    const id = $('quartoId').value;
+
+    const status = $('statusQuarto').value;
+    const motivoIndisponibilidade = $('motivoIndisponibilidadeQuarto').value.trim();
+
+    if (status === 'Manutenção' && !motivoIndisponibilidade) {
+      alert('Informe o motivo da indisponibilidade/manutenção do quarto.');
+      $('motivoIndisponibilidadeQuarto').focus();
+      return;
+    }
+
+    const quarto = {
+      id: id ? Number(id) : Date.now(),
+      numero: $('numeroQuarto').value,
+      diaria: moedaParaNumero($('diariaQuarto').value),
+      status,
+      motivoIndisponibilidade: status === 'Manutenção' ? motivoIndisponibilidade : ''
+    };
+
+    quartos = id
+      ? quartos.map(item => item.id === Number(id) ? quarto : item)
+      : [...quartos, quarto];
+
+    event.target.reset();
+    $('quartoId').value = '';
+    alternarMotivoIndisponibilidade();
+
+    salvarDados();
+    renderizar();
+  });
+
+  function editarQuarto(id) {
+    const quarto = quartos.find(item => item.id === id);
+    if (!quarto) return;
+
+    $('quartoId').value = quarto.id;
+    $('numeroQuarto').value = quarto.numero;
+    $('diariaQuarto').value = numeroParaMoeda(quarto.diaria);
+    $('statusQuarto').value = quarto.status;
+    $('motivoIndisponibilidadeQuarto').value = quarto.motivoIndisponibilidade || '';
+    alternarMotivoIndisponibilidade();
+  }
+
+  function excluirQuarto(id) {
+    if (!confirm('Deseja excluir este quarto?')) return;
+
+    quartos = quartos.filter(quarto => quarto.id !== id);
+    reservas = reservas.filter(reserva => reserva.quartoId !== id);
+
+    salvarDados();
+    renderizar();
+  }
+
+  function renderizarClientes() {
+    $('listaClientes').innerHTML = clientes.map(cliente => `
+      <tr>
+        <td class="text-center">${cliente.nome}</td>
+        <td class="text-center">${cliente.documento}</td>
+        <td class="text-center">${cliente.cidade || '-'}</td>
+        <td class="text-center">${cliente.nascimento ? formatarDataBR(cliente.nascimento) : '-'}</td>
+        <td class="text-center">${cliente.telefone}</td>
+        <td class="text-center">${cliente.email || '-'}</td>
+        <td class="actions text-center">
+          <button class="btn icon-btn btn-soft-neutral" data-tooltip="Editar" title="Editar" onclick="editarCliente(${cliente.id})">${iconEdit()}</button>
+          <button class="btn icon-btn btn-soft-danger" data-tooltip="Excluir" title="Excluir" onclick="excluirCliente(${cliente.id})">${iconTrash()}</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7">Nenhum hóspede cadastrado.</td></tr>';
+  }
+
+  document.getElementById('formCliente').addEventListener('submit', event => {
+    event.preventDefault();
+
+    if (!validarEmail($('emailCliente'))) return;
+
+    const id = $('clienteId').value;
+
+    const cliente = {
+      id: id ? Number(id) : Date.now(),
+      nome: $('nomeCliente').value,
+      documento: $('documentoCliente').value,
+      cidade: $('cidadeCliente').value,
+      nascimento: $('nascimentoCliente').value,
+      telefone: $('telefoneCliente').value,
+      email: $('emailCliente').value
+    };
+
+    clientes = id
+      ? clientes.map(item => item.id === Number(id) ? cliente : item)
+      : [...clientes, cliente];
+
+    event.target.reset();
+    $('clienteId').value = '';
+
+    salvarDados();
+    renderizar();
+  });
+
+  function editarCliente(id) {
+    const cliente = clientes.find(item => item.id === id);
+    if (!cliente) return;
+
+    $('clienteId').value = cliente.id;
+    $('nomeCliente').value = cliente.nome;
+    $('documentoCliente').value = cliente.documento;
+    $('cidadeCliente').value = cliente.cidade || '';
+    $('nascimentoCliente').value = cliente.nascimento || '';
+    $('telefoneCliente').value = cliente.telefone;
+    $('emailCliente').value = cliente.email || '';
+  }
+
+  function excluirCliente(id) {
+    if (!confirm('Deseja excluir este hóspede?')) return;
+
+    clientes = clientes.filter(cliente => cliente.id !== id);
+    reservas = reservas.filter(reserva => reserva.clienteId !== id);
+
+    salvarDados();
+    renderizar();
+  }
+
+
+  function alternarValorProduto() {
+    const tipoValor = $('tipoValorProduto')?.value || 'fixo';
+    const campoValor = $('valorProduto');
+
+    if (!campoValor) return;
+
+    if (tipoValor === 'variavel') {
+      campoValor.value = '';
+      campoValor.placeholder = 'Valor será informado no consumo';
+      campoValor.required = false;
+    } else {
+      campoValor.placeholder = 'Valor R$';
+      campoValor.required = true;
+    }
+  }
+
+  function renderizarProdutos() {
+    $('listaProdutos').innerHTML = produtos.map(produto => `
+      <tr>
+        <td class="text-center">${produto.nome}</td>
+        <td class="text-center">${produto.categoria}</td>
+        <td class="text-center">${produto.tipoValor === 'variavel' ? 'Valor variável' : 'Valor fixo'}</td>
+        <td class="text-right">${produto.tipoValor === 'variavel' ? 'Informar no consumo' : numeroParaMoeda(produto.valor)}</td>
+        <td class="actions text-center">
+          <button class="btn icon-btn btn-soft-neutral" data-tooltip="Editar" title="Editar" onclick="editarProduto(${produto.id})">${iconEdit()}</button>
+          <button class="btn icon-btn btn-soft-danger" data-tooltip="Excluir" title="Excluir" onclick="excluirProduto(${produto.id})">${iconTrash()}</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="5">Nenhum produto cadastrado.</td></tr>';
+  }
+
+  document.getElementById('formProduto').addEventListener('submit', event => {
+    event.preventDefault();
+
+    const id = $('produtoId').value;
+
+    const tipoValor = $('tipoValorProduto').value || 'fixo';
+
+    if (tipoValor === 'fixo' && moedaParaNumero($('valorProduto').value) <= 0) {
+      alert('Informe o valor do produto ou selecione “Valor variável”.');
+      $('valorProduto').focus();
+      return;
+    }
+
+    const produto = {
+      id: id ? Number(id) : Date.now(),
+      nome: $('nomeProduto').value,
+      categoria: $('categoriaProduto').value,
+      tipoValor,
+      valor: tipoValor === 'variavel' ? 0 : moedaParaNumero($('valorProduto').value)
+    };
+
+    produtos = id
+      ? produtos.map(item => item.id === Number(id) ? produto : item)
+      : [...produtos, produto];
+
+    event.target.reset();
+    $('produtoId').value = '';
+    alternarValorProduto();
+
+    salvarDados();
+    renderizar();
+  });
+
+  function editarProduto(id) {
+    const produto = produtos.find(item => item.id === id);
+    if (!produto) return;
+
+    $('produtoId').value = produto.id;
+    $('nomeProduto').value = produto.nome;
+    $('categoriaProduto').value = produto.categoria;
+    $('tipoValorProduto').value = produto.tipoValor || (produto.valor > 0 ? 'fixo' : 'variavel');
+    alternarValorProduto();
+    $('valorProduto').value = (produto.tipoValor === 'variavel') ? '' : numeroParaMoeda(produto.valor);
+  }
+
+  function excluirProduto(id) {
+    const possuiConsumo = consumos.some(consumo => consumo.produtoId === id);
+
+    if (possuiConsumo) {
+      alert('Este produto já possui consumo lançado e não pode ser excluído.');
+      return;
+    }
+
+    if (!confirm('Deseja excluir este produto?')) return;
+
+    produtos = produtos.filter(produto => produto.id !== id);
+
+    salvarDados();
+    renderizar();
+  }
+
+  function atualizarSelects() {
+    const clienteSelecionado = $('clienteReserva').value;
+    const quartoSelecionado = $('quartoReserva').value;
+    const filtroClienteSelecionado = $('filtroCliente').value;
+    const filtroQuartoSelecionado = $('filtroQuarto').value;
+
+    $('clienteReserva').innerHTML =
+      '<option value="">Selecione o hóspede</option>' +
+      clientes.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('');
+
+    $('quartoReserva').innerHTML =
+      '<option value="">Selecione o quarto</option>' +
+      quartos
+        .filter(quarto => quarto.status !== 'Manutenção' || String(quarto.id) === quartoSelecionado)
+        .map(quarto => `<option value="${quarto.id}">Quarto ${quarto.numero}</option>`)
+        .join('');
+
+    const tipoDiariaSelecionado = $('tipoDiariaReserva')?.value || '';
+    $('tipoDiariaReserva').innerHTML =
+      '<option value="">Selecione o tipo de diária</option>' +
+      tiposDiaria.map(tipo => `<option value="${tipo.id}">${tipo.nome} - ${numeroParaMoeda(tipo.valor)}</option>`).join('');
+    $('tipoDiariaReserva').value = tipoDiariaSelecionado;
+
+    $('filtroCliente').innerHTML =
+      '<option value="">Todos os hóspedes</option>' +
+      clientes.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('');
+
+    $('filtroQuarto').innerHTML =
+      '<option value="">Todos os quartos</option>' +
+      quartos.map(quarto => `<option value="${quarto.id}">Quarto ${quarto.numero}</option>`).join('');
+
+    const historicoClienteSelecionado = $('historicoClienteSelect')?.value || '';
+    if ($('historicoClienteSelect')) {
+      $('historicoClienteSelect').innerHTML =
+        '<option value="">Selecione o hóspede</option>' +
+        clientes.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('');
+      $('historicoClienteSelect').value = historicoClienteSelecionado;
+    }
+
+    $('clienteReserva').value = clienteSelecionado;
+    $('quartoReserva').value = quartoSelecionado;
+    $('filtroCliente').value = filtroClienteSelecionado;
+    $('filtroQuarto').value = filtroQuartoSelecionado;
+  }
+
+
+  function totalConsumoReserva(reservaId) {
+    return consumos
+      .filter(consumo => consumo.reservaId === reservaId)
+      .reduce((total, consumo) => total + Number(consumo.total || 0), 0);
+  }
+
+  function consumosDaReserva(reservaId) {
+    return consumos.filter(consumo => consumo.reservaId === reservaId);
+  }
+
+  function statusConsumoReserva(reservaId) {
+    const itens = consumosDaReserva(reservaId);
+
+    if (itens.length === 0) return '-';
+
+    const total = itens.reduce((soma, item) => soma + Number(item.total || 0), 0);
+    const pago = itens.reduce((soma, item) => soma + (item.pago ? Number(item.total || 0) : 0), 0);
+
+    if (pago <= 0) return 'Não pago';
+    if (pago >= total) return 'Pago';
+
+    return 'Parcial';
+  }
+
+  function badgeConsumo(status) {
+    if (status === 'Pago') return '<span class="badge livre">Pago</span>';
+    if (status === 'Parcial') return '<span class="badge aguardando-pagamento">Parcial</span>';
+    if (status === 'Não pago') return '<span class="badge cancelada">Não pago</span>';
+    return '-';
+  }
+
+  function marcarConsumoPago(reservaId) {
+    const itens = consumosDaReserva(reservaId);
+
+    if (!confirm('Confirmar pagamento de todo o consumo desta reserva?')) return;
+
+    consumos = consumos.map(consumo =>
+      consumo.reservaId === reservaId
+        ? { ...consumo, pago: true, pagoEm: new Date().toISOString() }
+        : consumo
+    );
+
+    salvarDados();
+    renderizar();
+  }
+
+  function imprimirConsumoReserva(reservaId) {
+    const reserva = reservas.find(item => item.id === reservaId);
+
+    if (!reserva) {
+      alert('Reserva não encontrada.');
+      return;
+    }
+
+    const itens = consumosDaReserva(reservaId);
+
+    const hospede = clientes.find(item => item.id === reserva.clienteId);
+    const quarto = quartos.find(item => item.id === reserva.quartoId);
+    const total = totalConsumoReserva(reservaId);
+    const status = statusConsumoReserva(reservaId);
+    const valores = valoresPagamentoReserva(reservaId);
+    const tipoDiariaCupom = reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-');
+    const quantidadeDiariasCupom = calcularDiarias(reserva.entrada, reserva.saida);
+    const valorReservaCupom = Number(reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida) || 0);
+    const valorMedioDiariaCupom = quantidadeDiariasCupom > 0 ? valorReservaCupom / quantidadeDiariasCupom : valorReservaCupom;
+    const statusDiariasCupom = valores.diariaAberta > 0 ? 'Em aberto' : 'Pago';
+
+    const hospedesAdicionaisCupom = (reserva.hospedesAdicionais || []).length
+      ? (reserva.hospedesAdicionais || []).map(h => h.nome).join(', ')
+      : '-';
+
+    const linhas = itens.length
+      ? itens.map(item => `
+          <tr>
+            <td>
+              <strong>${item.produtoNome}</strong><br>
+              <small>${item.quantidade} x ${numeroParaMoeda(item.valorUnitario)}</small>
+              ${item.observacao ? `<br><small>Obs.: ${item.observacao}</small>` : ''}
+            </td>
+            <td class="valor">${numeroParaMoeda(item.total)}</td>
+          </tr>
+        `).join('')
+      : '<tr><td colspan="2" class="center">Sem consumo lançado</td></tr>';
+
+    const conteudo = `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <title>Cupom de Consumo - Hotel Tempero Bahiano</title>
+        <style>
+          @page {
+            size: 80mm auto;
+            margin: 4mm;
+          }
+
+          * {
+            box-sizing: border-box;
+          }
+
+          body {
+            width: 72mm;
+            margin: 0 auto;
+            font-family: "Courier New", monospace;
+            color: #000;
+            font-size: 12px;
+            line-height: 1.35;
+          }
+
+          .cupom {
+            width: 100%;
+          }
+
+          .center {
+            text-align: center;
+          }
+
+          .right {
+            text-align: right;
+          }
+
+          .title {
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+          }
+
+          .empresa-logo-print {
+            max-width: 100px;
+            max-height: 70px;
+            object-fit: contain;
+            filter: grayscale(100%);
+            display: block;
+            margin: 0 auto 6px;
+          }
+
+          .subtitle {
+            font-size: 11px;
+            margin-bottom: 8px;
+          }
+
+          .linha {
+            border-top: 1px dashed #000;
+            margin: 8px 0;
+          }
+
+          .info {
+            margin: 6px 0;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          th {
+            font-size: 11px;
+            border-bottom: 1px dashed #000;
+            padding: 4px 0;
+            text-align: left;
+          }
+
+          td {
+            padding: 5px 0;
+            vertical-align: top;
+            border-bottom: 1px dotted #999;
+          }
+
+          td.valor {
+            text-align: right;
+            white-space: nowrap;
+            width: 28mm;
+          }
+
+          .total {
+            font-size: 14px;
+            font-weight: bold;
+          }
+
+          .assinatura {
+            margin-top: 18px;
+            text-align: center;
+          }
+
+          .assinatura .linha-assinatura {
+            border-top: 1px solid #000;
+            margin-top: 26px;
+            padding-top: 4px;
+          }
+
+          .footer {
+            margin-top: 10px;
+            font-size: 10px;
+            text-align: center;
+          }
+
+          @media print {
+            body {
+              width: 72mm;
+            }
+          }
+        
+    .toolbar-reservas {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .toolbar-reservas .busca-box {
+      display: grid;
+      grid-template-columns: 1fr 180px 180px;
+      gap: 10px;
+    }
+
+    .reserva-form-modal {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .reserva-form-modal .full {
+      grid-column: 1 / -1;
+    }
+
+    .desconto-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .desconto-box h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .checkout-resumo {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .checkout-resumo div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .checkout-resumo strong {
+      color: #1d4ed8;
+      font-size: 16px;
+    }
+
+    /* Gestão de Reservas em tabela limpa */
+    #reservas .table-wrap {
+      overflow-x: auto;
+    }
+
+    #reservas table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    #reservas thead {
+      display: table-header-group;
+    }
+
+    #reservas th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 900;
+      text-align: center;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+
+    #reservas td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    #reservas tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    #reservas th:nth-child(1), #reservas td:nth-child(1) { width: 18%; }
+    #reservas th:nth-child(2), #reservas td:nth-child(2) { width: 8%; }
+    #reservas th:nth-child(3), #reservas td:nth-child(3) { width: 17%; }
+    #reservas th:nth-child(4), #reservas td:nth-child(4) { width: 12%; }
+    #reservas th:nth-child(5), #reservas td:nth-child(5) { width: 12%; }
+    #reservas th:nth-child(6), #reservas td:nth-child(6) { width: 11%; text-align: right; }
+    #reservas th:nth-child(7), #reservas td:nth-child(7) { width: 22%; }
+
+    #reservas .acoes-reserva {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    #reservas .acoes-reserva .icon-btn {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      #reservas table {
+        min-width: 900px;
+      }
+
+      .toolbar-reservas {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar-reservas .busca-box,
+      .reserva-form-modal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .checkout-detalhes-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .checkout-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .checkout-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .checkout-card h4 {
+      margin: 0 0 10px;
+      color: #334155;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .checkout-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 13px;
+    }
+
+    .checkout-linha:last-child {
+      border-bottom: none;
+    }
+
+    .checkout-linha strong {
+      color: #0f172a;
+    }
+
+    .checkout-total-final {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-color: #bfdbfe;
+    }
+
+    .checkout-total-final .checkout-linha strong {
+      color: #1d4ed8;
+      font-size: 18px;
+    }
+
+    @media (max-width: 720px) {
+      .checkout-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .checkout-pagamento-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      padding: 14px;
+      grid-column: 1 / -1;
+    }
+
+    .checkout-pagamento-box h4 {
+      margin: 0 0 10px;
+      color: #9a3412;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hospedes-adicionais-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .hospedes-adicionais-box h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hospede-extra-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .hospede-extra-card h5 {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 720px) {
+      .hospede-extra-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .logo-config-box {
+      grid-column: 1 / -1;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .logo-preview {
+      width: 160px;
+      max-height: 90px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      background: #fff;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      display: none;
+    }
+
+    .empresa-logo-print {
+      max-width: 120px;
+      max-height: 80px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      display: block;
+      margin: 0 auto 8px;
+    }
+
+
+/* === PADRÃO DE TIPOGRAFIA GLOBAL === */
+body {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+h2, h3 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+th {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+td {
+  font-size: 13px;
+}
+
+input, select, textarea, button {
+  font-size: 13px;
+}
+
+/* TABELAS PADRONIZADAS */
+table {
+  font-size: 13px;
+}
+
+th {
+  background: #f1f5f9;
+}
+
+td {
+  padding: 10px 8px;
+}
+
+
+/* === CONTROLE DE ACESSO / LOGIN === */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: min(460px, 100%);
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+  border: 1px solid #e2e8f0;
+}
+
+.login-card h2 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.login-card p {
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+.login-opcoes {
+  display: grid;
+  gap: 12px;
+}
+
+.login-opcoes button {
+  text-align: left;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  font-weight: 800;
+  transition: .2s;
+}
+
+.login-opcoes button:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.usuario-logado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usuario-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.btn-sair {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+</style>
+      </head>
+      <body>
+
+        <div class="cupom">
+          <div class="center">
+            ${cabecalhoEmpresaCupomHTML()}
+            <div class="subtitle">Cupom de Consumo do Quarto</div>
+          </div>
+
+          <div class="linha"></div>
+
+          <div class="info">
+            <strong>Hóspede:</strong> ${hospede ? hospede.nome : 'Removido'}<br>
+            <strong>CPF:</strong> ${hospede ? (hospede.documento || '-') : '-'}<br>
+            <strong>Hóspedes adicionais:</strong> ${hospedesAdicionaisCupom}<br>
+            <strong>Total hóspedes:</strong> ${reserva.quantidadeHospedes || (1 + (reserva.hospedesAdicionais || []).length)}<br>
+            <strong>Quarto:</strong> ${quarto ? quarto.numero : 'Removido'}<br>
+            <strong>Reserva:</strong> ${formatarDataHoraReserva(reserva.entrada)}<br>
+            <strong>Saída:</strong> ${formatarDataHoraReserva(reserva.saida)}<br>
+            <strong>Status:</strong> ${status}<br>
+            <strong>Emitido:</strong> ${new Date().toLocaleString('pt-BR')}
+          </div>
+
+          <div class="linha"></div>
+
+          <div class="center"><strong>DIÁRIAS DA HOSPEDAGEM</strong></div>
+
+          <table>
+            <tr>
+              <td>Tipo diária</td>
+              <td class="valor">${tipoDiariaCupom}</td>
+            </tr>
+            <tr>
+              <td>Quantidade</td>
+              <td class="valor">${quantidadeDiariasCupom}</td>
+            </tr>
+            <tr>
+              <td>Valor diária</td>
+              <td class="valor">${numeroParaMoeda(valorMedioDiariaCupom)}</td>
+            </tr>
+            <tr>
+              <td>Subtotal diária(s)</td>
+              <td class="valor">${numeroParaMoeda(valorReservaCupom)}</td>
+            </tr>
+            <tr>
+              <td>Diária(s) paga(s)</td>
+              <td class="valor">${numeroParaMoeda(valores.diariaPaga)}</td>
+            </tr>
+            <tr>
+              <td>Diária(s) em aberto</td>
+              <td class="valor">${numeroParaMoeda(valores.diariaAberta)}</td>
+            </tr>
+            <tr>
+              <td>Status diária(s)</td>
+              <td class="valor">${statusDiariasCupom}</td>
+            </tr>
+          </table>
+
+          <div class="linha"></div>
+
+          <div class="center"><strong>CONSUMO DO QUARTO</strong></div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${linhas}
+            </tbody>
+          </table>
+
+          <div class="linha"></div>
+
+          <table>
+            <tr class="total">
+              <td>Total Consumo</td>
+              <td class="valor">${numeroParaMoeda(total)}</td>
+            </tr>
+          </table>
+
+          <div class="linha"></div>
+
+          <div class="assinatura">
+            <div class="linha-assinatura">Assinatura do hóspede</div>
+          </div>
+
+          <div class="footer">
+            Obrigado pela preferência.<br>
+            Documento sem valor fiscal.
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          }
+        <\/script>
+      </body>
+      </html>
+    `;
+
+    const janela = window.open('', '_blank');
+
+    if (!janela) {
+      alert('Permita pop-ups no navegador para imprimir o cupom.');
+      return;
+    }
+
+    janela.document.open();
+    janela.document.write(conteudo);
+    janela.document.close();
+  }
+
+  function abrirModalConsumo(reservaId) {
+    const reserva = reservas.find(item => item.id === reservaId);
+
+    if (!reserva) {
+      alert('Reserva não encontrada.');
+      return;
+    }
+
+    if (reserva.status !== 'Confirmada') {
+      alert('Consumo só pode ser lançado em reserva confirmada.');
+      return;
+    }
+
+    const cliente = clientes.find(item => item.id === reserva.clienteId);
+    const quarto = quartos.find(item => item.id === reserva.quartoId);
+
+    $('consumoReservaId').value = reservaId;
+    $('infoConsumoReserva').innerHTML = `
+      Reserva confirmada<br>
+      Hóspede: <strong>${cliente ? cliente.nome : 'Removido'}</strong><br>
+      Quarto: <strong>${quarto ? quarto.numero : 'Removido'}</strong>
+    `;
+
+    $('produtoConsumoSelect').innerHTML =
+      '<option value="">Selecione o produto</option>' +
+      produtos.map(produto => `<option value="${produto.id}">${produto.nome} - ${produto.tipoValor === 'variavel' ? 'Valor variável' : numeroParaMoeda(produto.valor)}</option>`).join('');
+
+    $('produtoConsumoSelect').value = '';
+    $('quantidadeConsumo').value = 1;
+    $('valorUnitarioConsumo').value = '';
+    $('totalConsumo').value = '';
+    $('observacaoConsumo').value = '';
+
+    $('modalConsumo').classList.add('open');
+  }
+
+  function fecharModalConsumo() {
+    $('modalConsumo').classList.remove('open');
+    $('consumoReservaId').value = '';
+    $('produtoConsumoSelect').value = '';
+    $('quantidadeConsumo').value = 1;
+    $('valorUnitarioConsumo').value = '';
+    $('totalConsumo').value = '';
+    $('observacaoConsumo').value = '';
+  }
+
+  function atualizarValorConsumo() {
+    const produtoId = Number($('produtoConsumoSelect').value);
+    const produto = produtos.find(item => item.id === produtoId);
+
+    if (produto) {
+      if (produto.tipoValor === 'variavel') {
+        $('valorUnitarioConsumo').value = '';
+        $('valorUnitarioConsumo').placeholder = 'Informe o valor do produto';
+        setTimeout(() => $('valorUnitarioConsumo').focus(), 50);
+      } else {
+        $('valorUnitarioConsumo').value = numeroParaMoeda(produto.valor);
+        $('valorUnitarioConsumo').placeholder = 'Valor unitário R$';
+      }
+    } else {
+      $('valorUnitarioConsumo').value = '';
+    }
+
+    atualizarTotalConsumo();
+  }
+
+  function atualizarTotalConsumo() {
+    const quantidade = Number($('quantidadeConsumo').value || 0);
+    const valorUnitario = moedaParaNumero($('valorUnitarioConsumo').value);
+    const total = quantidade * valorUnitario;
+
+    $('totalConsumo').value = numeroParaMoeda(total);
+  }
+
+  function confirmarConsumoReserva() {
+    const reservaId = Number($('consumoReservaId').value);
+    const produtoId = Number($('produtoConsumoSelect').value);
+    const quantidade = Number($('quantidadeConsumo').value || 0);
+    const valorUnitario = moedaParaNumero($('valorUnitarioConsumo').value);
+    const produto = produtos.find(item => item.id === produtoId);
+
+    if (!reservaId || !produto) {
+      alert('Selecione um produto para lançar o consumo.');
+      return;
+    }
+
+    if (quantidade <= 0) {
+      alert('Informe uma quantidade válida.');
+      return;
+    }
+
+    if (valorUnitario <= 0) {
+      alert('Informe um valor válido para o consumo. Produtos com valor variável precisam ter o valor preenchido no lançamento.');
+      return;
+    }
+
+    consumos.push({
+      id: Date.now(),
+      reservaId,
+      produtoId,
+      produtoNome: produto.nome,
+      quantidade,
+      valorUnitario,
+      total: quantidade * valorUnitario,
+      observacao: $('observacaoConsumo').value,
+      pago: false,
+      criadoEm: new Date().toISOString()
+    });
+
+    fecharModalConsumo();
+    salvarDados();
+    renderizar();
+  }
+
+
+  function abrirDetalhesReserva(reservaId) {
+    const reserva = reservas.find(item => item.id === reservaId);
+
+    if (!reserva) {
+      alert('Reserva não encontrada.');
+      return;
+    }
+
+    const hospede = clientes.find(item => item.id === reserva.clienteId);
+    const tipoDiaria = reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-');
+    const quantidadeDiarias = calcularDiarias(reserva.entrada, reserva.saida);
+    const valorReserva = Number(reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida) || 0);
+    const valorConsumo = totalConsumoReserva(reserva.id);
+    const totalGeral = valorReserva + valorConsumo;
+    const valorMedioDiaria = quantidadeDiarias > 0 ? valorReserva / quantidadeDiarias : valorReserva;
+    const itensConsumo = consumosDaReserva(reserva.id);
+    const listaHospedesAdicionais = (reserva.hospedesAdicionais || []).length
+      ? (reserva.hospedesAdicionais || []).map(h => `${h.nome}${h.documento ? ' - CPF: ' + h.documento : ''}`).join('<br>')
+      : '-';
+
+    const listaConsumo = itensConsumo.length
+      ? itensConsumo.map(item => `
+          <tr>
+            <td class="text-center">${item.produtoNome}</td>
+            <td class="text-center">${item.quantidade}</td>
+            <td class="text-right">${numeroParaMoeda(item.valorUnitario)}</td>
+            <td class="text-right">${numeroParaMoeda(item.total)}</td>
+            <td class="text-center">${item.pago ? 'Pago' : 'Não pago'}</td>
+          </tr>
+        `).join('')
+      : '<tr><td colspan="5" class="text-center">Nenhum consumo lançado.</td></tr>';
+
+    $('conteudoDetalhesReserva').innerHTML = `
+      <div class="detalhes-grid">
+        <div class="detalhes-financeiro">
+          <div class="detalhe-campo">
+            <span class="detalhe-label">Diária(s)</span>
+            <span class="detalhe-valor">${numeroParaMoeda(valorReserva)}</span>
+          </div>
+
+          <div class="detalhe-campo">
+            <span class="detalhe-label">Consumo</span>
+            <span class="detalhe-valor">${numeroParaMoeda(valorConsumo)}</span>
+          </div>
+
+          <div class="detalhe-campo detalhe-total-box">
+            <span class="detalhe-label">Total da hospedagem</span>
+            <span class="detalhe-valor">${numeroParaMoeda(totalGeral)}</span>
+          </div>
+        </div>
+
+        <div class="detalhes-secao">
+          <h4>Dados complementares da reserva</h4>
+
+          <div class="detalhes-campos">
+            <div class="detalhe-campo">
+              <span class="detalhe-label">CPF do hóspede</span>
+              <span class="detalhe-valor">${hospede ? (hospede.documento || '-') : '-'}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Cidade do hóspede</span>
+              <span class="detalhe-valor">${hospede ? (hospede.cidade || '-') : '-'}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Nascimento</span>
+              <span class="detalhe-valor">${hospede && hospede.nascimento ? formatarDataBR(hospede.nascimento) : '-'}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Telefone</span>
+              <span class="detalhe-valor">${hospede ? (hospede.telefone || '-') : '-'}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Total de hóspedes no quarto</span>
+              <span class="detalhe-valor">${reserva.quantidadeHospedes || (1 + (reserva.hospedesAdicionais || []).length)}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">E-mail</span>
+              <span class="detalhe-valor">${hospede ? (hospede.email || '-') : '-'}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Criada em</span>
+              <span class="detalhe-valor">${reserva.criadaEm ? new Date(reserva.criadaEm).toLocaleString('pt-BR') : '-'}</span>
+            </div>
+
+            <div class="detalhe-campo" style="grid-column:1 / -1;">
+              <span class="detalhe-label">Hóspedes adicionais</span>
+              <span class="detalhe-valor">${listaHospedesAdicionais}</span>
+            </div>
+
+            <div class="detalhe-campo" style="grid-column:1 / -1;">
+              <span class="detalhe-label">Motivo de cancelamento</span>
+              <span class="detalhe-valor">${reserva.motivoCancelamento || '-'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detalhes-secao">
+          <h4>Diárias do hotel</h4>
+
+          <div class="detalhes-campos">
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Tipo de diária</span>
+              <span class="detalhe-valor">${tipoDiaria}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Quantidade de diárias</span>
+              <span class="detalhe-valor">${quantidadeDiarias}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Valor médio da diária</span>
+              <span class="detalhe-valor">${numeroParaMoeda(valorMedioDiaria)}</span>
+            </div>
+
+            <div class="detalhe-campo">
+              <span class="detalhe-label">Subtotal diária(s)</span>
+              <span class="detalhe-valor">${numeroParaMoeda(valorReserva)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detalhes-secao">
+          <h4>Consumo do quarto</h4>
+
+          <div class="table-wrap">
+            <table style="min-width:0;">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Qtd.</th>
+                  <th>Valor Unitário</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>${listaConsumo}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('modalDetalhesReserva').classList.add('open');
+  }
+
+  function fecharModalDetalhesReserva() {
+    $('modalDetalhesReserva').classList.remove('open');
+    $('conteudoDetalhesReserva').innerHTML = '';
+  }
+
+
+
+  function gerarCamposHospedesAdicionais() {
+    const quantidade = Number($('quantidadeHospedesAdicionais')?.value || 0);
+    const container = $('camposHospedesAdicionais');
+
+    if (!container) return;
+
+    if (quantidade <= 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    let htmlCampos = '';
+
+    for (let i = 1; i <= quantidade; i++) {
+      htmlCampos += `
+        <div class="hospede-extra-card">
+          <h5>Hóspede adicional ${i}</h5>
+          <input class="extraNome" placeholder="Nome completo" required />
+          <input class="extraDocumento" placeholder="CPF" maxlength="14" oninput="mascaraCPF(this)" />
+          <input class="extraCidade" placeholder="Cidade" />
+          <input class="extraNascimento" type="date" />
+          <input class="extraTelefone" placeholder="Telefone" maxlength="15" oninput="mascaraTelefone(this)" />
+          <input class="extraEmail" type="email" placeholder="E-mail" />
+        </div>
+      `;
+    }
+
+    container.innerHTML = htmlCampos;
+  }
+
+  function coletarHospedesAdicionais() {
+    const cards = Array.from(document.querySelectorAll('.hospede-extra-card'));
+
+    return cards.map(card => ({
+      id: Date.now() + Math.floor(Math.random() * 100000),
+      nome: card.querySelector('.extraNome')?.value || '',
+      documento: card.querySelector('.extraDocumento')?.value || '',
+      cidade: card.querySelector('.extraCidade')?.value || '',
+      nascimento: card.querySelector('.extraNascimento')?.value || '',
+      telefone: card.querySelector('.extraTelefone')?.value || '',
+      email: card.querySelector('.extraEmail')?.value || ''
+    })).filter(hospede => hospede.nome.trim());
+  }
+
+  function cadastrarHospedesAdicionaisNaBase(hospedesExtras) {
+    hospedesExtras.forEach(hospede => {
+      const jaExiste = clientes.some(cliente =>
+        cliente.documento &&
+        hospede.documento &&
+        cliente.documento === hospede.documento
+      );
+
+      if (!jaExiste) {
+        clientes.push(hospede);
+      }
+    });
+  }
+
+  function preencherHospedesAdicionais(hospedesExtras = []) {
+    if (!$('quantidadeHospedesAdicionais')) return;
+
+    $('quantidadeHospedesAdicionais').value = hospedesExtras.length || 0;
+    gerarCamposHospedesAdicionais();
+
+    const cards = Array.from(document.querySelectorAll('.hospede-extra-card'));
+
+    hospedesExtras.forEach((hospede, index) => {
+      const card = cards[index];
+      if (!card) return;
+
+      card.querySelector('.extraNome').value = hospede.nome || '';
+      card.querySelector('.extraDocumento').value = hospede.documento || '';
+      card.querySelector('.extraCidade').value = hospede.cidade || '';
+      card.querySelector('.extraNascimento').value = hospede.nascimento || '';
+      card.querySelector('.extraTelefone').value = hospede.telefone || '';
+      card.querySelector('.extraEmail').value = hospede.email || '';
+    });
+  }
+
+  function abrirModalReserva(id = null) {
+    $('formReserva').reset();
+    $('reservaId').value = '';
+    $('valorReserva').value = '';
+    if ($('valorDiariaReserva')) $('valorDiariaReserva').value = '';
+    $('tipoDescontoReserva').value = '';
+    $('descontoReserva').value = '';
+    if ($('quantidadeHospedesAdicionais')) $('quantidadeHospedesAdicionais').value = 0;
+    if ($('camposHospedesAdicionais')) $('camposHospedesAdicionais').innerHTML = '';
+    $('tituloModalReserva').textContent = 'Nova reserva';
+    atualizarSelects();
+
+    if ($('entradaReserva')) $('entradaReserva').value = hojeISO();
+    if ($('saidaReserva')) $('saidaReserva').value = amanhaISO();
+
+    atualizarValorReservaSugerido();
+    atualizarResumoCheckoutReserva();
+
+    if (id) {
+      editarReserva(id);
+      return;
+    }
+
+    $('modalReserva').classList.add('open');
+  }
+
+  function fecharModalReserva() {
+    $('modalReserva').classList.remove('open');
+    $('formReserva').reset();
+    $('reservaId').value = '';
+    if ($('valorDiariaReserva')) $('valorDiariaReserva').value = '';
+    $('tipoDescontoReserva').value = '';
+    $('descontoReserva').value = '';
+    if ($('quantidadeHospedesAdicionais')) $('quantidadeHospedesAdicionais').value = 0;
+    if ($('camposHospedesAdicionais')) $('camposHospedesAdicionais').innerHTML = '';
+    atualizarResumoCheckoutReserva();
+  }
+
+  function valorDescontoReservaCalculado() {
+    const subtotal = moedaParaNumero($('valorReserva')?.value || 0);
+    const tipo = $('tipoDescontoReserva')?.value || '';
+    const descontoCampo = $('descontoReserva')?.value || '';
+
+    if (!tipo || !descontoCampo) return 0;
+
+    if (tipo === 'percentual') {
+      const percentual = Number(apenasNumeros(descontoCampo)) / 100;
+      return Math.min(subtotal, subtotal * (percentual / 100));
+    }
+
+    return Math.min(subtotal, moedaParaNumero(descontoCampo));
+  }
+
+  function totalReservaComDesconto() {
+    const subtotal = moedaParaNumero($('valorReserva')?.value || 0);
+    const desconto = valorDescontoReservaCalculado();
+    return Math.max(0, subtotal - desconto);
+  }
+
+  function mascaraDescontoReserva(campo) {
+    const tipo = $('tipoDescontoReserva')?.value;
+
+    if (tipo === 'percentual') {
+      let valor = apenasNumeros(campo.value).slice(0, 5);
+      const numero = Number(valor) / 100;
+      campo.value = `${numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+      return;
+    }
+
+    mascaraMoeda(campo);
+  }
+
+  function atualizarResumoCheckoutReserva() {
+    if (!$('resumoSubtotalReserva')) return;
+
+    const subtotal = moedaParaNumero($('valorReserva')?.value || 0);
+    const desconto = valorDescontoReservaCalculado();
+    const total = Math.max(0, subtotal - desconto);
+
+    const tipoDiariaId = $('tipoDiariaReserva')?.value;
+    const tipo = tiposDiaria.find(item => item.id === Number(tipoDiariaId));
+    if ($('resumoValorDiariaReserva')) {
+      $('resumoValorDiariaReserva').textContent = numeroParaMoeda(tipo ? tipo.valor : 0);
+    }
+    $('resumoSubtotalReserva').textContent = numeroParaMoeda(subtotal);
+    $('resumoDescontoReserva').textContent = numeroParaMoeda(desconto);
+    $('resumoTotalReserva').textContent = numeroParaMoeda(total);
+  }
+
+  function checkoutReserva() {
+    if (!$('tipoPagamentoReserva').value) {
+      alert('Informe o tipo de pagamento para finalizar o checkout.');
+      $('tipoPagamentoReserva').focus();
+      return;
+    }
+
+    $('statusReserva').value = 'Confirmada';
+    document.getElementById('formReserva').requestSubmit();
+  }
+
+  function reservasFiltradasGestao() {
+    const termo = ($('buscaReservas')?.value || '').toLowerCase().trim();
+    const dataDe = $('buscaReservaDe')?.value || '';
+    const dataAte = $('buscaReservaAte')?.value || '';
+
+    return reservas.filter(reserva => {
+      const cliente = clientes.find(item => item.id === reserva.clienteId);
+      const quarto = quartos.find(item => item.id === reserva.quartoId);
+      const tipoDiaria = reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-');
+
+      const texto = [
+        cliente ? cliente.nome : '',
+        quarto ? quarto.numero : '',
+        reserva.status,
+        reserva.tipoPagamento,
+        tipoDiaria
+      ].join(' ').toLowerCase();
+
+      const termoOk = !termo || texto.includes(termo);
+      const dataDeOk = !dataDe || dataHoraReserva(reserva.entrada) >= dataHoraReserva(dataDe);
+      const dataAteOk = !dataAte || dataHoraReserva(reserva.entrada) <= dataHoraReserva(dataAte);
+
+      return termoOk && dataDeOk && dataAteOk;
+    });
+  }
+
+
+  function valoresPagamentoReserva(reservaId) {
+    const reserva = reservas.find(item => item.id === reservaId);
+    if (!reserva) return null;
+
+    const valorReserva = Number(reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida) || 0);
+    const itens = consumosDaReserva(reservaId);
+    const totalConsumo = totalConsumoReserva(reservaId);
+
+    let consumoPago = itens.reduce((soma, item) => soma + (item.pago ? Number(item.total || 0) : 0), 0);
+    let consumoAberto = Math.max(0, totalConsumo - consumoPago);
+
+    const reservaPagaAntesCheckout = reserva.status === 'Confirmada' || reserva.status === 'Finalizada';
+    let diariaPaga = reservaPagaAntesCheckout ? valorReserva : 0;
+    let diariaAberta = reservaPagaAntesCheckout ? 0 : valorReserva;
+
+    const descontoCheckout = Number(reserva.descontoCheckout || 0);
+    const valorPagoCheckout = Number(reserva.valorPagoCheckout || 0);
+
+    if (reserva.status === 'Finalizada') {
+      diariaPaga = valorReserva;
+      diariaAberta = 0;
+      consumoPago = totalConsumo;
+      consumoAberto = 0;
+    }
+
+    const totalGeral = valorReserva + totalConsumo;
+    const totalPago = reserva.status === 'Finalizada'
+      ? Math.max(0, totalGeral - descontoCheckout)
+      : diariaPaga + consumoPago;
+    const totalAberto = reserva.status === 'Finalizada'
+      ? 0
+      : diariaAberta + consumoAberto;
+
+    return {
+      valorReserva,
+      totalConsumo,
+      consumoPago,
+      consumoAberto,
+      diariaPaga,
+      diariaAberta,
+      descontoCheckout,
+      valorPagoCheckout,
+      totalPago,
+      totalAberto,
+      totalGeral
+    };
+  }
+
+  function descontoCheckoutCalculado() {
+    const reservaId = Number($('checkoutReservaId')?.value || 0);
+    const valores = valoresPagamentoReserva(reservaId);
+    if (!valores) return 0;
+
+    const tipo = $('checkoutTipoDesconto')?.value || '';
+    const campo = $('checkoutDescontoValor')?.value || '';
+
+    if (!tipo || !campo) return 0;
+
+    if (tipo === 'percentual') {
+      const percentual = Number(apenasNumeros(campo)) / 100;
+      return Math.min(valores.totalAberto, valores.totalAberto * (percentual / 100));
+    }
+
+    return Math.min(valores.totalAberto, moedaParaNumero(campo));
+  }
+
+  function mascaraDescontoCheckout(campo) {
+    const tipo = $('checkoutTipoDesconto')?.value;
+
+    if (tipo === 'percentual') {
+      let valor = apenasNumeros(campo.value).slice(0, 5);
+      const numero = Number(valor) / 100;
+      campo.value = `${numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+      return;
+    }
+
+    mascaraMoeda(campo);
+  }
+
+  function alternarOutroMotivoDesconto() {
+    const motivo = $('checkoutMotivoDesconto').value;
+    $('checkoutOutroMotivoDesconto').style.display = motivo === 'Outro' ? 'block' : 'none';
+    if (motivo !== 'Outro') $('checkoutOutroMotivoDesconto').value = '';
+  }
+
+  function atualizarResumoCheckoutPagamento() {
+    const reservaId = Number($('checkoutReservaId')?.value || 0);
+    const valores = valoresPagamentoReserva(reservaId);
+    if (!valores) return;
+
+    const desconto = descontoCheckoutCalculado();
+    const totalPagar = Math.max(0, valores.totalAberto - desconto);
+
+    $('checkoutAbertoAntes').textContent = numeroParaMoeda(valores.totalAberto);
+    $('checkoutDescontoAplicado').textContent = numeroParaMoeda(desconto);
+    $('checkoutTotalPagar').textContent = numeroParaMoeda(totalPagar);
+  }
+
+  function abrirCheckoutReserva(reservaId) {
+    const reserva = reservas.find(item => item.id === reservaId);
+
+    if (!reserva) {
+      alert('Reserva não encontrada.');
+      return;
+    }
+
+    if (['Cancelada', 'Finalizada'].includes(reserva.status)) {
+      alert('Esta reserva não pode passar por checkout.');
+      return;
+    }
+
+    const cliente = clientes.find(item => item.id === reserva.clienteId);
+    const quarto = quartos.find(item => item.id === reserva.quartoId);
+    const tipoDiaria = reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-');
+    const valores = valoresPagamentoReserva(reservaId);
+
+    $('checkoutReservaId').value = reservaId;
+    $('checkoutTipoDesconto').value = '';
+    $('checkoutDescontoValor').value = '';
+    $('checkoutMotivoDesconto').value = '';
+    $('checkoutOutroMotivoDesconto').value = '';
+    $('checkoutOutroMotivoDesconto').style.display = 'none';
+    $('checkoutFormaPagamento').value = reserva.tipoPagamento || '';
+
+    $('checkoutDetalhesReserva').innerHTML = `
+      <div class="checkout-info-grid">
+        <div class="checkout-card">
+          <h4>Reserva</h4>
+          <div class="checkout-linha"><span>Hóspede</span><strong>${cliente ? cliente.nome : 'Removido'}</strong></div>
+          <div class="checkout-linha"><span>Quarto</span><strong>${quarto ? quarto.numero : 'Removido'}</strong></div>
+          <div class="checkout-linha"><span>Tipo de diária</span><strong>${tipoDiaria}</strong></div>
+          <div class="checkout-linha"><span>Período</span><strong>${formatarDataBR(reserva.entrada)} → ${formatarDataBR(reserva.saida)}</strong></div>
+          <div class="checkout-linha"><span>Status da reserva</span><strong>${reserva.status}</strong></div>
+        </div>
+
+        <div class="checkout-card">
+          <h4>Valores pagos e em aberto</h4>
+          <div class="checkout-linha"><span>Diária(s) paga(s)</span><strong>${numeroParaMoeda(valores.diariaPaga)}</strong></div>
+          <div class="checkout-linha"><span>Diária(s) em aberto</span><strong>${numeroParaMoeda(valores.diariaAberta)}</strong></div>
+          <div class="checkout-linha"><span>Consumo pago</span><strong>${numeroParaMoeda(valores.consumoPago)}</strong></div>
+          <div class="checkout-linha"><span>Consumo em aberto</span><strong>${numeroParaMoeda(valores.consumoAberto)}</strong></div>
+        </div>
+      </div>
+
+      <div class="checkout-card checkout-total-final">
+        <h4>Resumo final</h4>
+        <div class="checkout-linha"><span>Total já pago</span><strong>${numeroParaMoeda(valores.totalPago)}</strong></div>
+        <div class="checkout-linha"><span>Total em aberto</span><strong>${numeroParaMoeda(valores.totalAberto)}</strong></div>
+      </div>
+    `;
+
+    atualizarResumoCheckoutPagamento();
+    $('modalCheckoutReserva').classList.add('open');
+  }
+
+  function fecharModalCheckoutReserva() {
+    $('modalCheckoutReserva').classList.remove('open');
+    $('checkoutReservaId').value = '';
+  }
+
+  function confirmarCheckoutReserva() {
+    const reservaId = Number($('checkoutReservaId').value);
+    const reserva = reservas.find(item => item.id === reservaId);
+    const valores = valoresPagamentoReserva(reservaId);
+
+    if (!reserva || !valores) {
+      alert('Reserva não encontrada.');
+      return;
+    }
+
+    const formaPagamento = $('checkoutFormaPagamento').value;
+
+    if (!formaPagamento) {
+      alert('Informe a forma de pagamento do saldo em aberto.');
+      $('checkoutFormaPagamento').focus();
+      return;
+    }
+
+    const desconto = descontoCheckoutCalculado();
+    const totalPagar = Math.max(0, valores.totalAberto - desconto);
+    const motivoSelecionado = $('checkoutMotivoDesconto').value;
+    const outroMotivo = $('checkoutOutroMotivoDesconto').value.trim();
+
+    if (desconto > 0 && !motivoSelecionado) {
+      alert('Informe o motivo do desconto.');
+      $('checkoutMotivoDesconto').focus();
+      return;
+    }
+
+    if (motivoSelecionado === 'Outro' && !outroMotivo) {
+      alert('Informe o motivo personalizado do desconto.');
+      $('checkoutOutroMotivoDesconto').focus();
+      return;
+    }
+
+    const motivoFinal = motivoSelecionado === 'Outro' ? outroMotivo : motivoSelecionado;
+
+    consumos = consumos.map(consumo =>
+      consumo.reservaId === reservaId
+        ? { ...consumo, pago: true, pagoEm: new Date().toISOString() }
+        : consumo
+    );
+
+    reservas = reservas.map(item =>
+      item.id === reservaId
+        ? {
+            ...item,
+            status: 'Finalizada',
+            tipoPagamento: item.tipoPagamento || formaPagamento,
+            formaPagamentoCheckout: formaPagamento,
+            checkoutEm: new Date().toISOString(),
+            descontoCheckout: desconto,
+            motivoDescontoCheckout: motivoFinal || '',
+            valorPagoCheckout: totalPagar,
+            totalPagoCheckout: (valores.totalPago + totalPagar),
+            totalAbertoCheckout: 0
+          }
+        : item
+    );
+
+    fecharModalCheckoutReserva();
+    salvarDados();
+    renderizar();
+
+    if (confirm('Checkout finalizado com sucesso. Deseja imprimir o cupom agora?')) {
+      imprimirConsumoReserva(reservaId);
+    }
+  }
+
+  function renderizarReservas() {
+    $('listaReservas').innerHTML = reservasFiltradasGestao().map(reserva => {
+      const cliente = clientes.find(item => item.id === reserva.clienteId);
+      const quarto = quartos.find(item => item.id === reserva.quartoId);
+      const tipoDiaria = reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-');
+      const valorReserva = Number(reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida) || 0);
+      const valorConsumo = totalConsumoReserva(reserva.id);
+      const totalGeral = valorReserva + valorConsumo;
+
+      return `
+        <tr>
+          <td>${cliente ? cliente.nome : 'Removido'}</td>
+          <td>${quarto ? quarto.numero : 'Removido'}</td>
+          <td>${formatarDataBR(reserva.entrada)} → ${formatarDataBR(reserva.saida)}</td>
+          <td>${tipoDiaria}</td>
+          <td>${badgeStatus(reserva.status)}</td>
+          <td>${numeroParaMoeda(valorReserva)} / ${numeroParaMoeda(valorConsumo)}</td>
+          <td>
+            <div class="acoes-reserva">
+              <button class="btn icon-btn btn-soft-neutral" data-tooltip="Detalhes" title="Detalhes" onclick="abrirDetalhesReserva(${reserva.id})">${iconDetails()}</button>
+
+              ${['Confirmada', 'Aguardando pagamento'].includes(reserva.status)
+                ? `<button class="btn icon-btn btn-soft-primary" data-tooltip="Checkout" title="Checkout" onclick="abrirCheckoutReserva(${reserva.id})">${iconCheckout()}</button>`
+                : ''
+              }
+
+              ${reserva.status === 'Confirmada'
+                ? `<button class="btn icon-btn btn-soft-primary" data-tooltip="Adicionar consumo" title="Adicionar consumo" onclick="abrirModalConsumo(${reserva.id})">${iconConsumo()}</button>`
+                : ''
+              }
+
+              ${['Aguardando pagamento', 'Confirmada', 'Finalizada'].includes(reserva.status)
+                ? `<button class="btn icon-btn btn-soft-neutral" data-tooltip="Imprimir cupom" title="Imprimir cupom" onclick="imprimirConsumoReserva(${reserva.id})">${iconPrint()}</button>`
+                : ''
+              }
+
+              ${reserva.status === 'Confirmada' && totalConsumoReserva(reserva.id) > 0 && statusConsumoReserva(reserva.id) !== 'Pago'
+                ? `<button class="btn icon-btn btn-soft-primary" data-tooltip="Marcar consumo pago" title="Marcar consumo pago" onclick="marcarConsumoPago(${reserva.id})">${iconMoney()}</button>`
+                : ''
+              }
+
+              ${reserva.status === 'Aguardando pagamento'
+                ? `<button class="btn icon-btn btn-soft-primary" data-tooltip="Marcar como pago" title="Marcar como pago" onclick="marcarPago(${reserva.id})">${iconMoney()}</button>`
+                : ''
+              }
+
+              ${['Confirmada', 'Aguardando pagamento'].includes(reserva.status)
+                ? `<button class="btn icon-btn btn-soft-warning" data-tooltip="Cancelar reserva" title="Cancelar reserva" onclick="cancelarReserva(${reserva.id})">${iconCancel()}</button>`
+                : ''
+              }
+
+              <button class="btn icon-btn btn-soft-neutral" data-tooltip="Editar" title="Editar" onclick="abrirModalReserva(${reserva.id})">${iconEdit()}</button>
+              <button class="btn icon-btn btn-soft-danger" data-tooltip="Excluir" title="Excluir" onclick="excluirReserva(${reserva.id})">${iconTrash()}</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('') || '<tr><td colspan="7">Nenhuma reserva cadastrada.</td></tr>';
+  }
+
+  document.getElementById('formReserva').addEventListener('submit', event => {
+    event.preventDefault();
+
+    const entrada = $('entradaReserva').value;
+    const saida = $('saidaReserva').value;
+
+    if (dataHoraReserva(saida) <= dataHoraReserva(entrada)) {
+      alert('A data de saída deve ser posterior à data de entrada.');
+      return;
+    }
+
+    const id = $('reservaId').value;
+    const status = $('statusReserva').value;
+    const tipoPagamento = $('tipoPagamentoReserva').value;
+
+    if (!$('clienteReserva').value) {
+      alert('Selecione o hóspede da reserva.');
+      $('clienteReserva').focus();
+      return;
+    }
+
+    if (!$('quartoReserva').value) {
+      alert('Selecione o quarto da reserva.');
+      $('quartoReserva').focus();
+      return;
+    }
+
+    if (!$('tipoDiariaReserva').value) {
+      alert('Selecione o tipo de diária da reserva.');
+      $('tipoDiariaReserva').focus();
+      return;
+    }
+
+    if (moedaParaNumero($('valorReserva').value) <= 0) {
+      atualizarValorReservaSugerido();
+
+      if (moedaParaNumero($('valorReserva').value) <= 0) {
+        alert('Informe um valor válido para a reserva.');
+        $('valorReserva').focus();
+        return;
+      }
+    }
+
+    if (status === 'Confirmada' && !tipoPagamento) {
+      alert('Informe o tipo de pagamento para confirmar a reserva.');
+      $('tipoPagamentoReserva').focus();
+      return;
+    }
+
+    const hospedesAdicionais = coletarHospedesAdicionais();
+    cadastrarHospedesAdicionaisNaBase(hospedesAdicionais);
+
+    const reserva = {
+      id: id ? Number(id) : Date.now(),
+      clienteId: Number($('clienteReserva').value),
+      hospedesAdicionais,
+      quantidadeHospedes: 1 + hospedesAdicionais.length,
+      quartoId: Number($('quartoReserva').value),
+      tipoDiariaId: Number($('tipoDiariaReserva').value),
+      tipoDiariaNome: (tiposDiaria.find(tipo => tipo.id === Number($('tipoDiariaReserva').value))?.nome || ''),
+      valorDiaria: (tiposDiaria.find(tipo => tipo.id === Number($('tipoDiariaReserva').value))?.valor || 0),
+      entrada,
+      saida,
+      status,
+      tipoPagamento: status === 'Confirmada' ? tipoPagamento : '',
+      valorReservaSubtotal: moedaParaNumero($('valorReserva').value),
+      tipoDesconto: $('tipoDescontoReserva').value || '',
+      descontoReserva: valorDescontoReservaCalculado(),
+      valorReserva: totalReservaComDesconto(),
+      criadaEm: id
+        ? (reservas.find(item => item.id === Number(id))?.criadaEm || new Date().toISOString())
+        : new Date().toISOString()
+    };
+
+    if (quartoBloqueadoNoPeriodo(reserva.quartoId, reserva.entrada, reserva.saida, reserva.id)) {
+      alert('Este quarto já possui reserva confirmada ou aguardando pagamento nesse período.');
+      return;
+    }
+
+    reservas = id
+      ? reservas.map(item => item.id === Number(id) ? reserva : item)
+      : [...reservas, reserva];
+
+    event.target.reset();
+    $('reservaId').value = '';
+    if ($('modalReserva')) $('modalReserva').classList.remove('open');
+
+    salvarDados();
+    renderizar();
+  });
+
+  function editarReserva(id) {
+    const reserva = reservas.find(item => item.id === id);
+    if (!reserva) return;
+
+    atualizarSelects();
+
+    $('reservaId').value = reserva.id;
+    $('clienteReserva').value = reserva.clienteId;
+    $('quartoReserva').value = reserva.quartoId;
+    $('tipoDiariaReserva').value = reserva.tipoDiariaId || '';
+    const tipoSelecionado = tiposDiaria.find(item => item.id === Number(reserva.tipoDiariaId));
+    if ($('valorDiariaReserva')) {
+      $('valorDiariaReserva').value = tipoSelecionado ? numeroParaMoeda(tipoSelecionado.valor) : '';
+    }
+    $('entradaReserva').value = reserva.entrada;
+    $('saidaReserva').value = reserva.saida;
+    $('statusReserva').value = reserva.status;
+    $('tipoPagamentoReserva').value = reserva.tipoPagamento || '';
+    preencherHospedesAdicionais(reserva.hospedesAdicionais || []);
+    $('valorReserva').value = numeroParaMoeda(reserva.valorReservaSubtotal || reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida));
+    $('tipoDescontoReserva').value = reserva.tipoDesconto || '';
+    $('descontoReserva').value = reserva.tipoDesconto === 'percentual' ? '' : (reserva.descontoReserva ? numeroParaMoeda(reserva.descontoReserva) : '');
+    atualizarResumoCheckoutReserva();
+    $('tituloModalReserva').textContent = 'Editar reserva';
+    $('modalReserva').classList.add('open');
+  }
+
+  function marcarPago(id) {
+    const tipoPagamento = prompt('Informe o tipo de pagamento: Dinheiro, Pix, Contrato ou Cartão');
+
+    if (!['Dinheiro', 'Pix', 'Contrato', 'Cartão'].includes(tipoPagamento)) {
+      alert('Tipo de pagamento inválido.');
+      return;
+    }
+
+    const reserva = reservas.find(item => item.id === id);
+    if (!reserva) return;
+
+    if (quartoBloqueadoNoPeriodo(reserva.quartoId, reserva.entrada, reserva.saida, reserva.id)) {
+      alert('Este quarto já possui reserva confirmada ou aguardando pagamento nesse período.');
+      return;
+    }
+
+    reservas = reservas.map(item =>
+      item.id === id
+        ? {
+            ...item,
+            status: 'Confirmada',
+            tipoPagamento,
+            pagoEm: new Date().toISOString()
+          }
+        : item
+    );
+
+    salvarDados();
+    renderizar();
+  }
+
+  function cancelarReserva(id) {
+    const reserva = reservas.find(item => item.id === id);
+
+    if (!reserva) {
+      alert('Reserva não encontrada.');
+      return;
+    }
+
+    if (!['Confirmada', 'Aguardando pagamento'].includes(reserva.status)) {
+      alert('Somente reservas confirmadas ou aguardando pagamento podem ser canceladas.');
+      return;
+    }
+
+    $('cancelamentoReservaId').value = id;
+    $('motivoCancelamentoSelect').value = '';
+    $('outroMotivoCancelamento').value = '';
+    $('outroMotivoCancelamento').style.display = 'none';
+    $('modalCancelamento').classList.add('open');
+  }
+
+  function fecharModalCancelamento() {
+    $('modalCancelamento').classList.remove('open');
+    $('cancelamentoReservaId').value = '';
+    $('motivoCancelamentoSelect').value = '';
+    $('outroMotivoCancelamento').value = '';
+    $('outroMotivoCancelamento').style.display = 'none';
+  }
+
+  function alternarOutroMotivoCancelamento() {
+    const motivo = $('motivoCancelamentoSelect').value;
+    $('outroMotivoCancelamento').style.display = motivo === 'Outro' ? 'block' : 'none';
+
+    if (motivo !== 'Outro') {
+      $('outroMotivoCancelamento').value = '';
+    }
+  }
+
+  function confirmarCancelamentoReserva() {
+    const id = Number($('cancelamentoReservaId').value);
+    const motivoSelecionado = $('motivoCancelamentoSelect').value;
+    const outroMotivo = $('outroMotivoCancelamento').value.trim();
+
+    if (!motivoSelecionado) {
+      alert('Selecione um motivo para cancelar a reserva.');
+      return;
+    }
+
+    let motivoFinal = motivoSelecionado;
+
+    if (motivoSelecionado === 'Outro') {
+      if (!outroMotivo) {
+        alert('Informe o motivo do cancelamento.');
+        $('outroMotivoCancelamento').focus();
+        return;
+      }
+
+      motivoFinal = outroMotivo;
+    }
+
+    reservas = reservas.map(reserva =>
+      reserva.id === id
+        ? {
+            ...reserva,
+            status: 'Cancelada',
+            motivoCancelamento: motivoFinal,
+            canceladaEm: new Date().toISOString()
+          }
+        : reserva
+    );
+
+    fecharModalCancelamento();
+    salvarDados();
+    renderizar();
+  }
+
+  function excluirReserva(id) {
+    if (!confirm('Deseja excluir esta reserva?')) return;
+
+    reservas = reservas.filter(reserva => reserva.id !== id);
+
+    salvarDados();
+    renderizar();
+  }
+
+  function reservasFiltradas() {
+    return reservas.filter(reserva =>
+      (!$('filtroStatus').value || reserva.status === $('filtroStatus').value) &&
+      (!$('filtroPagamento').value || reserva.tipoPagamento === $('filtroPagamento').value) &&
+      (!$('filtroCliente').value || reserva.clienteId === Number($('filtroCliente').value)) &&
+      (!$('filtroQuarto').value || reserva.quartoId === Number($('filtroQuarto').value)) &&
+      (!$('filtroEntradaDe').value || dataHoraReserva(reserva.entrada) >= dataHoraReserva($('filtroEntradaDe').value)) &&
+      (!$('filtroEntradaAte').value || dataHoraReserva(reserva.entrada) <= dataHoraReserva($('filtroEntradaAte').value))
+    );
+  }
+
+  function renderizarRelatorio() {
+    const filtradas = reservasFiltradas();
+
+    $('relTotal').textContent = filtradas.length;
+    $('relConfirmadas').textContent = filtradas.filter(item => item.status === 'Confirmada').length;
+    $('relPendentes').textContent = filtradas.filter(item => item.status === 'Aguardando pagamento').length;
+    $('relCanceladas').textContent = filtradas.filter(item => item.status === 'Cancelada').length;
+
+    $('listaRelatorioReservas').innerHTML = filtradas.map(reserva => {
+      const cliente = clientes.find(item => item.id === reserva.clienteId);
+      const quarto = quartos.find(item => item.id === reserva.quartoId);
+
+      return `
+        <tr>
+          <td class="text-center">${cliente ? cliente.nome : 'Removido'}</td>
+          <td class="text-center">${quarto ? quarto.numero : 'Removido'}</td>
+          <td class="text-center">${reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-')}</td>
+          <td class="text-center">${formatarDataHoraReserva(reserva.entrada)}</td>
+          <td class="text-center">${formatarDataHoraReserva(reserva.saida)}</td>
+          <td class="text-center">${badgeStatus(reserva.status)}</td>
+          <td class="text-center">${reserva.tipoPagamento || '-'}</td>
+          <td class="text-center">${reserva.motivoCancelamento || '-'}</td>
+          <td class="text-center">${reserva.criadaEm ? new Date(reserva.criadaEm).toLocaleString('pt-BR') : '-'}</td>
+        </tr>
+      `;
+    }).join('') || '<tr><td colspan="8">Nenhuma reserva encontrada.</td></tr>';
+  }
+
+  function gerarPDFRelatorio() {
+    const filtradas = reservasFiltradas();
+
+    if (filtradas.length === 0) {
+      alert('Nenhuma reserva encontrada para gerar o PDF.');
+      return;
+    }
+
+    const linhas = filtradas.map(reserva => {
+      const cliente = clientes.find(item => item.id === reserva.clienteId);
+      const quarto = quartos.find(item => item.id === reserva.quartoId);
+
+      return `
+        <tr>
+          <td style="text-align:center">${cliente ? cliente.nome : 'Removido'}</td>
+          <td style="text-align:center">${quarto ? quarto.numero : 'Removido'}</td>
+          <td style="text-align:center">${formatarDataHoraReserva(reserva.entrada)}</td>
+          <td style="text-align:center">${formatarDataHoraReserva(reserva.saida)}</td>
+          <td style="text-align:center">${reserva.status}</td>
+          <td style="text-align:center">${reserva.tipoPagamento || '-'}</td>
+          <td style="text-align:center">${reserva.motivoCancelamento || '-'}</td>
+          <td style="text-align:center">${reserva.criadaEm ? new Date(reserva.criadaEm).toLocaleString('pt-BR') : '-'}</td>
+        </tr>
+      `;
+    }).join('');
+
+    const dataGeracao = new Date().toLocaleString('pt-BR');
+
+    const conteudo = `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <title>Relatório de Reservas - Hotel Tempero Bahiano</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 24px;
+            color: #111827;
+          }
+
+          h1 {
+            margin-bottom: 4px;
+            font-size: 22px;
+          }
+
+          .empresa {
+            text-align: center;
+            margin-bottom: 14px;
+            line-height: 1.45;
+          }
+
+          .empresa-logo-print {
+            max-width: 120px;
+            max-height: 80px;
+            object-fit: contain;
+            filter: grayscale(100%);
+            display: block;
+            margin: 0 auto 8px;
+          }
+
+          h2 {
+            margin-top: 0;
+            color: #475569;
+            font-size: 15px;
+            font-weight: normal;
+          }
+
+          .info {
+            margin: 18px 0;
+            font-size: 13px;
+            color: #475569;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+          }
+
+          th, td {
+            border: 1px solid #cbd5e1;
+            padding: 7px;
+            text-align: center;
+            vertical-align: top;
+          }
+
+          .valor {
+            text-align: right;
+          }
+
+          th {
+            background: #f1f5f9;
+            color: #0f172a;
+            text-transform: uppercase;
+            font-size: 10px;
+          }
+
+          .resumo {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+          }
+
+          .box {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px;
+          }
+
+          .box strong {
+            display: block;
+            font-size: 18px;
+            margin-top: 4px;
+          }
+
+          @media print {
+            body {
+              padding: 10mm;
+            }
+
+            button {
+              display: none;
+            }
+          }
+        
+    .toolbar-reservas {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .toolbar-reservas .busca-box {
+      display: grid;
+      grid-template-columns: 1fr 180px 180px;
+      gap: 10px;
+    }
+
+    .reserva-form-modal {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .reserva-form-modal .full {
+      grid-column: 1 / -1;
+    }
+
+    .desconto-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .desconto-box h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .checkout-resumo {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .checkout-resumo div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .checkout-resumo strong {
+      color: #1d4ed8;
+      font-size: 16px;
+    }
+
+    /* Gestão de Reservas em tabela limpa */
+    #reservas .table-wrap {
+      overflow-x: auto;
+    }
+
+    #reservas table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    #reservas thead {
+      display: table-header-group;
+    }
+
+    #reservas th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 900;
+      text-align: center;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+
+    #reservas td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    #reservas tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    #reservas th:nth-child(1), #reservas td:nth-child(1) { width: 18%; }
+    #reservas th:nth-child(2), #reservas td:nth-child(2) { width: 8%; }
+    #reservas th:nth-child(3), #reservas td:nth-child(3) { width: 17%; }
+    #reservas th:nth-child(4), #reservas td:nth-child(4) { width: 12%; }
+    #reservas th:nth-child(5), #reservas td:nth-child(5) { width: 12%; }
+    #reservas th:nth-child(6), #reservas td:nth-child(6) { width: 11%; text-align: right; }
+    #reservas th:nth-child(7), #reservas td:nth-child(7) { width: 22%; }
+
+    #reservas .acoes-reserva {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    #reservas .acoes-reserva .icon-btn {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      #reservas table {
+        min-width: 900px;
+      }
+
+      .toolbar-reservas {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar-reservas .busca-box,
+      .reserva-form-modal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .checkout-detalhes-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .checkout-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .checkout-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .checkout-card h4 {
+      margin: 0 0 10px;
+      color: #334155;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .checkout-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 13px;
+    }
+
+    .checkout-linha:last-child {
+      border-bottom: none;
+    }
+
+    .checkout-linha strong {
+      color: #0f172a;
+    }
+
+    .checkout-total-final {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-color: #bfdbfe;
+    }
+
+    .checkout-total-final .checkout-linha strong {
+      color: #1d4ed8;
+      font-size: 18px;
+    }
+
+    @media (max-width: 720px) {
+      .checkout-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .checkout-pagamento-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      padding: 14px;
+      grid-column: 1 / -1;
+    }
+
+    .checkout-pagamento-box h4 {
+      margin: 0 0 10px;
+      color: #9a3412;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hospedes-adicionais-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .hospedes-adicionais-box h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hospede-extra-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .hospede-extra-card h5 {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 720px) {
+      .hospede-extra-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .logo-config-box {
+      grid-column: 1 / -1;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .logo-preview {
+      width: 160px;
+      max-height: 90px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      background: #fff;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      display: none;
+    }
+
+    .empresa-logo-print {
+      max-width: 120px;
+      max-height: 80px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      display: block;
+      margin: 0 auto 8px;
+    }
+
+
+/* === PADRÃO DE TIPOGRAFIA GLOBAL === */
+body {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+h2, h3 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+th {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+td {
+  font-size: 13px;
+}
+
+input, select, textarea, button {
+  font-size: 13px;
+}
+
+/* TABELAS PADRONIZADAS */
+table {
+  font-size: 13px;
+}
+
+th {
+  background: #f1f5f9;
+}
+
+td {
+  padding: 10px 8px;
+}
+
+
+/* === CONTROLE DE ACESSO / LOGIN === */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: min(460px, 100%);
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+  border: 1px solid #e2e8f0;
+}
+
+.login-card h2 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.login-card p {
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+.login-opcoes {
+  display: grid;
+  gap: 12px;
+}
+
+.login-opcoes button {
+  text-align: left;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  font-weight: 800;
+  transition: .2s;
+}
+
+.login-opcoes button:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.usuario-logado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usuario-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.btn-sair {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+</style>
+      </head>
+      <body>
+
+        <div class="empresa">
+          ${cabecalhoEmpresaHTML()}
+        </div>
+        <h2>Relatório de Reservas</h2>
+
+        <div class="info">
+          Gerado em: ${dataGeracao}<br>
+          Total de registros: ${filtradas.length}
+        </div>
+
+        <div class="resumo">
+          <div class="box">Total<strong>${filtradas.length}</strong></div>
+          <div class="box">Confirmadas<strong>${filtradas.filter(r => r.status === 'Confirmada').length}</strong></div>
+          <div class="box">Pendentes<strong>${filtradas.filter(r => r.status === 'Aguardando pagamento').length}</strong></div>
+          <div class="box">Canceladas<strong>${filtradas.filter(r => r.status === 'Cancelada').length}</strong></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Hóspede</th>
+              <th>Quarto</th>
+              <th>Entrada</th>
+              <th>Saída</th>
+              <th>Status</th>
+              <th>Forma de Pagamento</th>
+              <th>Motivo de Cancelamento</th>
+              <th>Criada em</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${linhas}
+          </tbody>
+        </table>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          }
+        <\/script>
+      </body>
+      </html>
+    `;
+
+    const janela = window.open('', '_blank');
+
+    if (!janela) {
+      alert('Permita pop-ups no navegador para gerar o PDF.');
+      return;
+    }
+
+    janela.document.open();
+    janela.document.write(conteudo);
+    janela.document.close();
+  }
+
+  function renderizarHistoricoCliente() {
+    const clienteId = Number($('historicoClienteSelect')?.value || 0);
+
+    if (!clienteId) {
+      $('histTotalReservas').textContent = '0';
+      $('histValorReservas').textContent = numeroParaMoeda(0);
+      $('histValorConsumo').textContent = numeroParaMoeda(0);
+      $('histTotalGeral').textContent = numeroParaMoeda(0);
+      $('listaHistoricoCliente').innerHTML = '<tr><td colspan="11">Selecione um hóspede para visualizar o histórico.</td></tr>';
+      return;
+    }
+
+    const cliente = clientes.find(item => item.id === clienteId);
+    const historico = reservas
+      .filter(reserva => reserva.clienteId === clienteId)
+      .sort((a, b) => dataHoraReserva(b.entrada) - dataHoraReserva(a.entrada));
+
+    const valorReservas = historico.reduce((total, reserva) => {
+      return total + Number(reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida) || 0);
+    }, 0);
+
+    const valorConsumo = historico.reduce((total, reserva) => {
+      return total + totalConsumoReserva(reserva.id);
+    }, 0);
+
+    $('histTotalReservas').textContent = historico.length;
+    $('histValorReservas').textContent = numeroParaMoeda(valorReservas);
+    $('histValorConsumo').textContent = numeroParaMoeda(valorConsumo);
+    $('histTotalGeral').textContent = numeroParaMoeda(valorReservas + valorConsumo);
+
+    $('listaHistoricoCliente').innerHTML = historico.map(reserva => {
+      const quarto = quartos.find(item => item.id === reserva.quartoId);
+      const valorReserva = Number(reserva.valorReserva || valorSugeridoReserva(reserva.tipoDiariaId, reserva.entrada, reserva.saida) || 0);
+      const valorConsumo = totalConsumoReserva(reserva.id);
+
+      return `
+        <tr>
+          <td class="text-center">${cliente ? cliente.nome : 'Removido'}</td>
+          <td class="text-center">${quarto ? quarto.numero : 'Removido'}</td>
+          <td class="text-center">${reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-')}</td>
+          <td class="text-center">${formatarDataHoraReserva(reserva.entrada)}</td>
+          <td class="text-center">${formatarDataHoraReserva(reserva.saida)}</td>
+          <td class="text-center">${badgeStatus(reserva.status)}</td>
+          <td class="text-right">${numeroParaMoeda(valorReserva)}</td>
+          <td class="text-right">${numeroParaMoeda(valorConsumo)}</td>
+          <td class="text-right">${numeroParaMoeda(valorReserva + valorConsumo)}</td>
+          <td class="text-center">${reserva.tipoPagamento || '-'}</td>
+          <td class="text-center">${reserva.motivoCancelamento || '-'}</td>
+        </tr>
+      `;
+    }).join('') || '<tr><td colspan="11">Nenhuma reserva encontrada para este hóspede.</td></tr>';
+  }
+
+  function limparHistoricoCliente() {
+    if ($('historicoClienteSelect')) $('historicoClienteSelect').value = '';
+    $('histTotalReservas').textContent = '0';
+    $('histValorReservas').textContent = numeroParaMoeda(0);
+    $('histValorConsumo').textContent = numeroParaMoeda(0);
+    $('histTotalGeral').textContent = numeroParaMoeda(0);
+    $('listaHistoricoCliente').innerHTML = '<tr><td colspan="11">Selecione um hóspede para visualizar o histórico.</td></tr>';
+  }
+
+  function limparFiltrosRelatorio() {
+    ['filtroStatus', 'filtroPagamento', 'filtroCliente', 'filtroQuarto', 'filtroEntradaDe', 'filtroEntradaAte']
+      .forEach(id => $(id).value = '');
+
+    renderizarRelatorio();
+  }
+
+  document.getElementById('formConfig').addEventListener('submit', event => {
+    event.preventDefault();
+
+    config.horasPagamento = Number($('tempoPagamento').value);
+
+    salvarDados();
+    renderizar();
+
+    alert('Configuração salva com sucesso.');
+  });
+
+  function periodoFiltroDashboard() {
+    const inicio = $('dashboardFiltroDe')?.value || hojeISO();
+    const fim = $('dashboardFiltroAte')?.value || amanhaISO();
+
+    return { inicio, fim };
+  }
+
+  function reservasDoQuartoNoPeriodo(quartoId, inicio, fim) {
+    return reservas
+      .filter(reserva =>
+        reserva.quartoId === quartoId &&
+        ['Confirmada', 'Aguardando pagamento'].includes(reserva.status) &&
+        datasSobrepostas(inicio, fim, reserva.entrada, reserva.saida)
+      )
+      .sort((a, b) => dataHoraReserva(a.entrada) - dataHoraReserva(b.entrada));
+  }
+
+  function quartosComReservasNoPeriodo(inicio, fim) {
+    return quartos.filter(quarto => reservasDoQuartoNoPeriodo(quarto.id, inicio, fim).length > 0);
+  }
+
+  function verReservasDashboard(quartoId) {
+    const quarto = quartos.find(item => item.id === quartoId);
+    const { inicio, fim } = periodoFiltroDashboard();
+    const lista = reservasDoQuartoNoPeriodo(quartoId, inicio, fim);
+
+    if (!quarto || lista.length === 0) {
+      $('detalheReservasDashboard').innerHTML = '<p class="hint">Nenhuma reserva encontrada para este quarto no período selecionado.</p>';
+      return;
+    }
+
+    $('detalheReservasDashboard').innerHTML = lista.map(reserva => {
+      const cliente = clientes.find(item => item.id === reserva.clienteId);
+
+      return `
+        <div class="reserva-dashboard-item">
+          <strong>Quarto ${quarto.numero}</strong><br>
+          Hóspede: ${cliente ? cliente.nome : 'Hóspede removido'}<br>
+          Tipo de diária: ${reserva.tipoDiariaNome || (tiposDiaria.find(tipo => tipo.id === reserva.tipoDiariaId)?.nome || '-')}<br>
+          Entrada: ${formatarDataHoraReserva(reserva.entrada)}<br>
+          Saída: ${formatarDataHoraReserva(reserva.saida)}<br>
+          Status: ${reserva.status}<br>
+          Forma de pagamento: ${reserva.tipoPagamento || '-'}<br>
+          Criada em: ${reserva.criadaEm ? new Date(reserva.criadaEm).toLocaleString('pt-BR') : '-'}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function limparFiltroDashboard() {
+    if ($('dashboardFiltroDe')) $('dashboardFiltroDe').value = '';
+    if ($('dashboardFiltroAte')) $('dashboardFiltroAte').value = '';
+    if ($('detalheReservasDashboard')) {
+      $('detalheReservasDashboard').innerHTML = '<p class="hint">Clique no botão “Ver reservas” de um quarto para visualizar a lista aqui.</p>';
+    }
+    renderizarDashboard();
+  }
+
+  function renderizarDashboard() {
+    $('totalQuartos').textContent = quartos.length;
+    $('quartosLivres').textContent = quartos.filter(quarto => quarto.status === 'Livre').length;
+    $('quartosOcupados').textContent = quartos.filter(quarto => quarto.status === 'Ocupado').length;
+    $('reservasPendentes').textContent = reservas.filter(reserva => reserva.status === 'Aguardando pagamento').length;
+
+    $('dashboardDisponiveis').innerHTML = quartos
+      .filter(quarto => quarto.status === 'Livre')
+      .map(quarto => `
+        <tr>
+          <td class="text-center">${quarto.numero}</td>
+          <td class="text-right">${numeroParaMoeda(quarto.diaria)}</td>
+          <td class="text-center">${badgeStatus(quarto.status)}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="3">Nenhum quarto disponível hoje.</td></tr>';
+
+    const { inicio, fim } = periodoFiltroDashboard();
+    const quartosFiltrados = quartosComReservasNoPeriodo(inicio, fim);
+
+    $('dashboardOcupados').innerHTML = quartosFiltrados
+      .map(quarto => {
+        const quantidadeReservas = reservasDoQuartoNoPeriodo(quarto.id, inicio, fim).length;
+
+        return `
+          <tr>
+            <td class="text-center">${quarto.numero}</td>
+            <td class="text-right">${numeroParaMoeda(quarto.diaria)}</td>
+            <td class="text-center">${badgeStatus(quarto.status)}</td>
+            <td class="text-center">
+              <button class="btn btn-primary icon-btn" title="Ver reservas" onclick="verReservasDashboard(${quarto.id})">
+                ${quantidadeReservas}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="4">Nenhuma reserva encontrada no período selecionado.</td></tr>';
+  }
+
+  function logoEmpresaHTML(classe = 'empresa-logo-print') {
+    const empresa = dadosEmpresa();
+
+    if (!empresa.logo) return '';
+
+    return `<img src="${empresa.logo}" class="${classe}" alt="Logo da empresa" />`;
+  }
+
+  function carregarLogoEmpresa(event) {
+    const arquivo = event.target.files && event.target.files[0];
+
+    if (!arquivo) return;
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e) {
+      config.empresa = config.empresa || {};
+      config.empresa.logo = e.target.result;
+      salvarDados();
+      renderizarConfig();
+    };
+
+    leitor.readAsDataURL(arquivo);
+  }
+
+  function removerLogoEmpresa() {
+    if (!confirm('Deseja remover a logo da empresa?')) return;
+
+    config.empresa = config.empresa || {};
+    config.empresa.logo = '';
+    $('empresaLogo').value = '';
+
+    salvarDados();
+    renderizarConfig();
+  }
+
+  function dadosEmpresa() {
+    return config.empresa || {
+      nome: 'Hotel Tempero Bahiano',
+      cnpj: '',
+      telefone: '',
+      email: '',
+      endereco: '',
+      cidade: ''
+    };
+  }
+
+  function cabecalhoEmpresaHTML() {
+    const empresa = dadosEmpresa();
+
+    return `
+      ${logoEmpresaHTML()}
+      <h1>${empresa.nome || 'Hotel Tempero Bahiano'}</h1>
+      ${empresa.cnpj ? `<div>CNPJ: ${empresa.cnpj}</div>` : ''}
+      ${empresa.endereco ? `<div>${empresa.endereco}</div>` : ''}
+      ${empresa.cidade ? `<div>${empresa.cidade}</div>` : ''}
+      ${empresa.telefone ? `<div>Telefone: ${empresa.telefone}</div>` : ''}
+      ${empresa.email ? `<div>E-mail: ${empresa.email}</div>` : ''}
+    `;
+  }
+
+  function cabecalhoEmpresaCupomHTML() {
+    const empresa = dadosEmpresa();
+
+    return `
+      ${logoEmpresaHTML('empresa-logo-print')}
+      <div class="title">${empresa.nome || 'Hotel Tempero Bahiano'}</div>
+      ${empresa.cnpj ? `<div>CNPJ: ${empresa.cnpj}</div>` : ''}
+      ${empresa.endereco ? `<div>${empresa.endereco}</div>` : ''}
+      ${empresa.cidade ? `<div>${empresa.cidade}</div>` : ''}
+      ${empresa.telefone ? `<div>Tel.: ${empresa.telefone}</div>` : ''}
+      ${empresa.email ? `<div>${empresa.email}</div>` : ''}
+    `;
+  }
+
+  document.getElementById('formEmpresa').addEventListener('submit', event => {
+    event.preventDefault();
+
+    config.empresa = {
+      nome: $('empresaNome').value,
+      cnpj: $('empresaCnpj').value,
+      telefone: $('empresaTelefone').value,
+      email: $('empresaEmail').value,
+      endereco: $('empresaEndereco').value,
+      cidade: $('empresaCidade').value,
+      logo: (config.empresa && config.empresa.logo) ? config.empresa.logo : ''
+    };
+
+    salvarDados();
+    renderizar();
+
+    alert('Dados da empresa salvos com sucesso.');
+  });
+
+  function renderizarConfig() {
+    const empresa = dadosEmpresa();
+
+    $('empresaNome').value = empresa.nome || '';
+    $('empresaCnpj').value = empresa.cnpj || '';
+    $('empresaTelefone').value = empresa.telefone || '';
+    $('empresaEmail').value = empresa.email || '';
+    $('empresaEndereco').value = empresa.endereco || '';
+    $('empresaCidade').value = empresa.cidade || '';
+
+    if ($('previewLogoEmpresa')) {
+      if (empresa.logo) {
+        $('previewLogoEmpresa').src = empresa.logo;
+        $('previewLogoEmpresa').style.display = 'block';
+      } else {
+        $('previewLogoEmpresa').removeAttribute('src');
+        $('previewLogoEmpresa').style.display = 'none';
+      }
+    }
+
+    $('previewEmpresa').innerHTML = `
+      ${empresa.logo ? `<img src="${empresa.logo}" class="empresa-logo-print" alt="Logo da empresa"><br>` : ''}
+      <strong>${empresa.nome || 'Hotel Tempero Bahiano'}</strong><br>
+      ${empresa.cnpj ? `CNPJ: ${empresa.cnpj}<br>` : ''}
+      ${empresa.endereco ? `${empresa.endereco}<br>` : ''}
+      ${empresa.cidade ? `${empresa.cidade}<br>` : ''}
+      ${empresa.telefone ? `Telefone: ${empresa.telefone}<br>` : ''}
+      ${empresa.email ? `E-mail: ${empresa.email}` : ''}
+    `;
+
+    $('tempoPagamento').value = config.horasPagamento;
+    $('tempoAtualPagamento').textContent = config.horasPagamento;
+  }
+
+  function renderizar() {
+    cancelarReservasExpiradas();
+    atualizarStatusQuartos();
+    atualizarSelects();
+    renderizarTiposDiaria();
+    renderizarQuartos();
+    renderizarClientes();
+    renderizarProdutos();
+    renderizarReservas();
+    renderizarDashboard();
+    renderizarRelatorio();
+    if ($('historicoClienteSelect')?.value) {
+      renderizarHistoricoCliente();
+    } else if ($('listaHistoricoCliente')) {
+      limparHistoricoCliente();
+    }
+    renderizarConfig();
+    if (dadosCarregadosFirebase) {
+      salvarDados();
+    }
+  }
+
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && $('modalCancelamento')?.classList.contains('open')) {
+      fecharModalCancelamento();
+    }
+
+    if (event.key === 'Escape' && $('modalConsumo')?.classList.contains('open')) {
+      fecharModalConsumo();
+    }
+
+    if (event.key === 'Escape' && $('modalDetalhesReserva')?.classList.contains('open')) {
+      fecharModalDetalhesReserva();
+    }
+  });
+
+  document.getElementById('modalCancelamento')?.addEventListener('click', event => {
+    if (event.target.id === 'modalCancelamento') {
+      fecharModalCancelamento();
+    }
+  });
+
+  document.getElementById('modalConsumo')?.addEventListener('click', event => {
+    if (event.target.id === 'modalConsumo') {
+      fecharModalConsumo();
+    }
+  });
+
+  document.getElementById('modalDetalhesReserva')?.addEventListener('click', event => {
+    if (event.target.id === 'modalDetalhesReserva') {
+      fecharModalDetalhesReserva();
+    }
+  });
+
+  document.getElementById('modalReserva')?.addEventListener('click', event => {
+    if (event.target.id === 'modalReserva') {
+      fecharModalReserva();
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && $('modalReserva')?.classList.contains('open')) {
+      fecharModalReserva();
+    }
+  });
+
+  document.getElementById('modalCheckoutReserva')?.addEventListener('click', event => {
+    if (event.target.id === 'modalCheckoutReserva') {
+      fecharModalCheckoutReserva();
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && $('modalCheckoutReserva')?.classList.contains('open')) {
+      fecharModalCheckoutReserva();
+    }
+  });
+
+  setInterval(renderizar, 60000);
+  carregarDadosFirebase();
+</script>
+</body>
+</html>
